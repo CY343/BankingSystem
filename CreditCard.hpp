@@ -2,7 +2,6 @@
 #define CREDITCARD_HPP
 #include<iostream>
 #include<string>
-#include<vector>
 
 class CreditCard{
     private:
@@ -14,7 +13,7 @@ class CreditCard{
 
     public:
         CreditCard();
-        CreditCard(const std::string& credit_card_number, const std::string& expiration, const std::string& cvv, double& credit_limit,bool isActivated);
+        CreditCard(const std::string& credit_card_number, const std::string& expiration, const std::string& cvv, const double& credit_limit, const bool& isActivated);
         ~CreditCard();
         std::string getCreditCardNum()const;
         std::string getExpiration()const;
@@ -23,18 +22,6 @@ class CreditCard{
         bool isActivated()const;
 
         bool setCreditLimit(double& limit);
-        void setActivated(bool isActivate);
+        void setActivated(bool& isActivate);
 };
-
-
-
-
-
-
-
-
-
-
-
-
 #endif

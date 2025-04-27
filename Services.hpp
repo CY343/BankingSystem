@@ -1,26 +1,26 @@
 #ifndef SERVICES_HPP
 #define SERVICES_HPP
 #include<iostream>
-#include<string>
 #include<vector>
 #include"Customers.hpp"
 #include"BankAccount.hpp"
 #include<unordered_set>
 #include"CreditCard.hpp"
+#include<memory>
 
 class Services{
     private:
-        std::vector<Customers*> customers_;
-        std::vector<BankAccount*> accounts_;
+        std::vector<std::shared_ptr<Customers>> customers_;
+        std::vector<std::shared_ptr<BankAccount>> accounts_;
 
     public:
         Services();
         ~Services();
-        bool addCustomers(const std::vector<Customers*>& NewCustomers);
-        bool deleteCustomers(const std::vector<Customers*>& CustomersToDelete);
-        const std::vector<Customers*>& getCustomers() const;
+        bool addCustomers(const std::vector<std::shared_ptr<Customers>>& NewCustomers);
+        bool deleteCustomers(const std::vector<std::shared_ptr<Customers>>& CustomersToDelete);
+        const std::vector<std::shared_ptr<Customers>>& getCustomers() const;
         bool openAccount();
-        void issueCreditCardToCustomers(Customers* customers, BankAccount* account, const std::string& cardNumber, const std::string& expiration, const std::string& cvv, double creditLimit, bool isActivated);
+        void issueCreditCardToCustomers(std::shared_ptr<Customers> customers, std::shared_ptr<BankAccount> account, const std::string& cardNumber, const std::string& expiration, const std::string& cvv, double creditLimit, bool isActivated);
 
 
     

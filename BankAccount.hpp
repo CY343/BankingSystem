@@ -4,6 +4,7 @@
 #include<iostream>
 #include<string>
 #include"CreditCard.hpp"
+#include<memory>
 
 class Customers;
 
@@ -15,13 +16,14 @@ class BankAccount{
         double account_balance_;
         bool hasLowBalance_;
         double earning_interest_rate_;
-        std::vector<Customers*> customers;
-        std::vector<CreditCard*> creditCards_;
+        int account_number_;
+        std::vector<std::shared_ptr<Customers>> customers;
+        std::vector<std::shared_ptr<CreditCard>> creditCards_;
         // std::vector<Transaction*> transaction_;
 
     public:
         BankAccount();
-        BankAccount(const double& deposit, const double& withdrawal = 0.0, const double& account_balance = 0.0, const bool& hasLowBalance = false, const double& earning_interest_rate = 0.0);
+        BankAccount(const double& deposit, const double& withdrawal, const double& account_balance, const bool& hasLowBalance, const double& earning_interest_rate, const int& account_number);
         ~BankAccount();
         double getDeposit()const;
         bool setDeposit(const double& deposit);
@@ -32,10 +34,11 @@ class BankAccount{
         bool isLowBalance()const;
         double getInterestRate()const;
         bool setEarningInterestRate(const double& interest_rate);
-        bool applyDeposit(double& amount);
-        bool applyWithdraw(double& amount);
-        void addCreditCard(const std::string& credit_card_num, const std::string& expiration_date, const std::string& cvv_num, double& creditLimit, bool& isActivated);
-
+        bool applyDeposit(const double& amount);
+        bool applyWithdraw(const double& amount);
+        void addCreditCard(const std::string& credit_card_num, const std::string& expiration_date, const std::string& cvv_num, double creditLimit, bool isActivated);
+        int getAccountNumber()const;
+        
 
 
 

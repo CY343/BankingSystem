@@ -11,7 +11,7 @@ CreditCard::CreditCard()
      isActivated_ = false;
 }
 
-CreditCard::CreditCard(const std::string &credit_card_number, const std::string &expiration, const std::string &cvv, double &credit_limit, bool isActivated)
+CreditCard::CreditCard(const std::string &credit_card_number, const std::string &expiration, const std::string &cvv, const double &credit_limit, const bool& isActivated)
 :credit_card_number_(credit_card_number), expiration_(expiration), cvv_(cvv), credit_limit_(credit_limit), isActivated_(isActivated) {}
 
 CreditCard::~CreditCard() {}
@@ -41,7 +41,7 @@ bool CreditCard::isActivated()const
     return isActivated_;
 }
 
-void CreditCard::setActivated(bool isActivated)
+void CreditCard::setActivated(bool& isActivated)
 {
     isActivated_ = isActivated;
 }

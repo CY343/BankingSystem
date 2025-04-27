@@ -29,7 +29,7 @@ bool Customers::setName(const std::string& name)
     {
         if(!isalpha(name[i]))
         {
-            std::cout << "Please enter a vaild name!" << std::endl;
+            std::cout << "Please enter a valid name!" << std::endl;
             return false;
         }
     }  
@@ -118,12 +118,27 @@ void Customers::display() const
     std::cout << "Age: " << customers_age_ << std::endl;
 }
 
-void Customers::linkAccount(std::vector<BankAccount*> account)
+void Customers::linkAccount(std::shared_ptr<BankAccount> account)
 {
     account_ = account;
 }
 
-std::vector<BankAccount*> Customers::getAccount()const
+std::shared_ptr<BankAccount> Customers::getAccount()const
 {
     return account_;
+}
+
+void Customers::setCreditCard(std::vector<std::shared_ptr<CreditCard>> &card)
+{
+    creditCard_ = card;
+}
+
+bool Customers::hasCreditCard() const
+{
+    return !creditCard_.empty();
+}
+
+std::vector<std::shared_ptr<CreditCard>> &Customers::getCreditCard()
+{
+    return creditCard_;
 }

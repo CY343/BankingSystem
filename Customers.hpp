@@ -6,7 +6,7 @@
 #include<vector>
 
 class BankAccount;
-
+class CreditCard;
 
 class Customers{
     private:
@@ -14,7 +14,8 @@ class Customers{
         std::string customers_email_;
         std::string customers_phone_number_;
         int customers_age_;
-        std::vector<BankAccount*> account_;
+        std::shared_ptr<BankAccount> account_;
+        std::vector<std::shared_ptr<CreditCard>> creditCard_;
 
     public:
         Customers();
@@ -29,14 +30,11 @@ class Customers{
         int getAge() const;
         bool setAge(const int age);
         void display() const;
-        void linkAccount(std::vector<BankAccount*> account);
-        std::vector<BankAccount*> getAccount() const;
+        void linkAccount(std::shared_ptr<BankAccount> account);
+        std::shared_ptr<BankAccount> getAccount() const;
+        void setCreditCard(std::vector<std::shared_ptr<CreditCard>>& card);
+        bool hasCreditCard()const;
+        std::vector<std::shared_ptr<CreditCard>>& getCreditCard();
         
-
-
 };
-
-
-
-
 #endif
