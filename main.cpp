@@ -1,42 +1,58 @@
-#include"Customers.hpp"
+#include "Customers.hpp"
+#include "BankAccount.hpp"
+#include "CreditCard.hpp"
 #include "Services.hpp"
-#include <iostream>
-#include <vector>
 
 int main() {
-    Services service;
-
-    // Create a new customer
-    Customers* customer = new Customers("Wayne", "wayne@gmail.com", "1234567890", 30);
-    std::vector<Customers*> newCustomers = { customer };
-    service.addCustomers(newCustomers);
-
-    // Open a bank account
-    BankAccount* account = new BankAccount(500.0);  // initial deposit
-    std::vector<BankAccount*> accounts = { account };
-    customer->linkAccount(accounts);  // link the account to the customer
-
-    // Issue a credit card
-    service.issueCreditCardToCustomers(customer, account, "4111111111111111", "12/26", "123", 1000.0, true);
+    // Create some customers
+    std::shared_ptr<Customers> customer1 = std::make_shared<Customers>("Alice", "alice@example.com", "", 30);
+    std::shared_ptr<Customers> customer2 = std::make_shared<Customers>("Bob", "bob@example.com", "1987654321", 40);
 
     // Display customer details
-    customer->display();
+    customer1->display();
+    customer2->display();
 
-    // Test deposit
-    double depositAmount = 200.0;
-    if (account->applyDeposit(depositAmount)) {
-        std::cout << "Deposit successful. New balance: $" << account->getAccountBalance() << std::endl;
-    }
+    // Create a BankAccount for Alice
+    std::shared_ptr<BankAccount> aliceAccount = std::make_shared<BankAccount>(1000.0, 200.0, 800.0, false, 5.0, 101);
+    customer1->linkAccount(aliceAccount);  // Linking account to Alice
 
-    // Test withdraw
-    double withdrawAmount = 100.0;
-    if (account->applyWithdraw(withdrawAmount)) {
-        std::cout << "Withdrawal successful. New balance: $" << account->getAccountBalance() << std::endl;
-    }
+    // Create Credit Card for Alice
+    std::shared_ptr<CreditCard> aliceCreditCard = std::make_shared<CreditCard>("1234-5678-9876-5432", "12/24", "123", 5000.0, true);
+    std::vector<std::shared_ptr<CreditCard>> aliceCards = {aliceCreditCard};
+    customer1->setCreditCard(aliceCards);  // Assign credit card to Alice
 
-    // Clean up manually (to match your raw pointer design)
-    delete account;
-    delete customer;
+    // Create BankAccount for Bob
+    std::shared_ptr<BankAccount> bobAccount = std::make_shared<BankAccount>(500.0, 100.0, 400.0, false, 3.0, 102);
+    customer2->linkAccount(bobAccount);  // Linking account to Bob
+
+    // Create Credit Card for Bob
+    std::shared_ptr<CreditCard> bobCreditCard = std::make_shared<CreditCard>("4321-8765-5678-1234", "11/23", "321", 3000.0, true);
+    std::vector<std::shared_ptr<CreditCard>> bobCards = {bobCreditCard};
+    customer2->setCreditCard(bobCards);  // Assign credit card to Bob
+
+    // Issue a Credit Card using Services class
+    Services bankService;
+    bankService.issueCreditCardToCustomers(customer1, aliceAccount, "5678-1234-4321-8765", "10/25", "456", 8000.0, true);
+
+    // Print customers again to see changes
+    customer1->display();
+    customer2->display();
+
+    // Show account balances
+    std::cout << "Alice's account balance: " << aliceAccount->getAccountBalance() << std::endl;
+    std::cout << "Bob's account balance: " << bobAccount->getAccountBalance() << std::endl;
+
+    // Withdraw money from Alice's account
+    aliceAccount->applyWithdraw(150.0);
+    std::cout << "Alice's account balance after withdrawal: " << aliceAccount->getAccountBalance() << std::endl;
+
+    // Deposit money into Bob's account
+    bobAccount->applyDeposit(500.0);
+    std::cout << "Bob's account balance after deposit: " << bobAccount->getAccountBalance() << std::endl;
+
+    // Check if customers have credit cards
+    std::cout << "Does Alice have a credit card? " << (customer1->hasCreditCard() ? "Yes" : "No") << std::endl;
+    std::cout << "Does Bob have a credit card? " << (customer2->hasCreditCard() ? "Yes" : "No") << std::endl;
 
     return 0;
 }

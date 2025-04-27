@@ -12,7 +12,16 @@ Customers::Customers(){
 Customers::Customers(const std::string& name, const std::string& email, const std::string& phone_number, int age)
 : customers_name_(name), customers_email_(email), customers_phone_number_(phone_number), customers_age_(age)
 {
-
+    setAge(age);
+    if (!setName(name)) {
+        customers_name_ = "NONE";
+    }
+    if (!setEmail(email)) {
+        customers_email_ = "NONE";
+    }
+    if (!setPhoneNumber(phone_number)) {
+        customers_phone_number_ = "NONE";
+    }
 }
 
 Customers::~Customers() {}
@@ -83,15 +92,13 @@ bool Customers::setPhoneNumber(const std::string& phone_number)
             return false;
         }
     }
-
-    for(size_t i = 0; i < phone_number.size(); i++)
-    {
-        if(phone_number[0] != '1')
+    
+        if(phone_number[0] != '1' || phone_number.empty()||phone_number.size()> 10 || phone_number.size() <10)
         {
-            std::cout << "American users Only" << std::endl;
+            std::cout << "Phone number is invalid" << std::endl;
             return false;
         }
-    }
+        
     customers_phone_number_ = phone_number;
     return true;
    
@@ -112,10 +119,10 @@ void Customers::display() const
 {
 
     std::cout << "Customer Details:" << std::endl;
-    std::cout << "Name: " << customers_name_ << std::endl;
-    std::cout << "Email: " << customers_email_ << std::endl;
-    std::cout << "Phone Number: " << customers_phone_number_ << std::endl;
-    std::cout << "Age: " << customers_age_ << std::endl;
+    std::cout << "Name: " << getName() << std::endl;
+    std::cout << "Email: " << getEmail() << std::endl;
+    std::cout << "Phone Number: " << getPhoneNumber()<< std::endl;
+    std::cout << "Age: " << getAge() << std::endl;
 }
 
 void Customers::linkAccount(std::shared_ptr<BankAccount> account)
