@@ -2,49 +2,13 @@
 #include <iostream>
 #include <string>
 
-CreditCard::CreditCard()
-{
-    credit_card_number_ = "NONE";
-    expiration_ = "NONE";
-    cvv_ = "NONE";
-    credit_limit_ = 0;
-    isActivated_ = false;
-}
+CreditCard::CreditCard():Card("None", "None", "None", false), credit_limit_(0){}
 
-CreditCard::CreditCard(const std::string &credit_card_number, const std::string &expiration, const std::string &cvv, const double &credit_limit, const bool &isActivated)
-    : credit_card_number_(credit_card_number), expiration_(expiration), cvv_(cvv), credit_limit_(credit_limit), isActivated_(isActivated) {}
+
+CreditCard::CreditCard(const std::string &number, const std::string &expiration, const std::string &cvv, const bool &isActivated, const double &credit_limit)
+    : Card(number, expiration, cvv, isActivated), credit_limit_(credit_limit){}
 
 CreditCard::~CreditCard() {}
-
-std::string CreditCard::getCreditCardNum() const
-{
-    return credit_card_number_;
-}
-
-std::string CreditCard::getExpiration() const
-{
-    return expiration_;
-}
-
-std::string CreditCard::getCvv() const
-{
-    return cvv_;
-}
-
-double CreditCard::getCreditLimit() const
-{
-    return credit_limit_;
-}
-
-bool CreditCard::isActivated() const
-{
-    return isActivated_;
-}
-
-void CreditCard::setActivated(bool &isActivated)
-{
-    isActivated_ = isActivated;
-}
 
 bool CreditCard::setCreditLimit(double &limit)
 {
@@ -55,4 +19,29 @@ bool CreditCard::setCreditLimit(double &limit)
     }
     else
         throw std::invalid_argument("Credit limit is invaild. ");
+}
+
+double CreditCard::getCreditLimit()const
+{
+    return credit_limit_;
+}
+
+bool CreditCard::validate() const
+{
+    if(!Card::validate())
+    {
+        return false;
+    }
+
+    return credit_limit_ > 0;
+}
+
+bool CreditCard::processPayment(double amount)
+{
+    if(!isActivated() || amount > credit_limit_)
+    {
+        return false;
+    }
+
+    return true;
 }

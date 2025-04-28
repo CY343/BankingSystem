@@ -6,7 +6,7 @@ CXXFLAGS = -std=c++17 -Wall -g
 TARGET = BankingSystem
 
 # Source and object files
-SRCS = main.cpp Customers.cpp BankAccount.cpp CreditCard.cpp Services.cpp
+SRCS = main.cpp Customers.cpp BankAccount.cpp CreditCard.cpp Services.cpp Card.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 # Default target
