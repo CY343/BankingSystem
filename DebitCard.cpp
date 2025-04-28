@@ -1,0 +1,76 @@
+#include"DebitCard.hpp"
+#include<iostream>
+#include<string>
+
+DebitCard::DebitCard():Card("None", "None", "NONE", false),daily_withdrawal_limit_(0.0), daily_spend_amount_(0.0), pin_("None"), contactless_enable_(false){}
+
+DebitCard::DebitCard(const std::string &number, const std::string &expiration, const std::string &cvv, const bool &isActivated,
+const double& daily_withdrawal_limit, const double& daily_spend_amount, const std::string& pin, const bool contactless_enable,std::shared_ptr<BankAccount> account)
+:Card(number, expiration, cvv, isActivated),daily_withdrawal_limit_(daily_withdrawal_limit), daily_spend_amount_(daily_spend_amount), pin_(pin), contactless_enable_(contactless_enable), linked_account_(account)
+ {
+    setPin(pin);
+ }
+
+DebitCard::~DebitCard(){}
+
+double DebitCard::getDailyWithdrawalLimit() const
+{
+    return daily_withdrawal_limit_;
+}
+
+double DebitCard::getDailySpendAmount() const
+{
+    return daily_spend_amount_;
+}
+
+std::string DebitCard::getPin() const
+{
+    return pin_;
+}
+
+bool DebitCard::SetDailySpendAmount(const double &amount)
+{
+    daily_spend_amount_ = amount;
+    return true;
+}
+
+bool DebitCard::SetDailyWithdrawalLimit(const double &limit)
+{
+    daily_withdrawal_limit_ = limit;
+    return true;
+}
+
+bool DebitCard::setPin(const std::string &pin)
+{
+    if(pin.size() < 4 || pin.size() > 6)
+    {
+        std::cout << "The pin must be within 4 to 6 digits" << std::endl;
+        return false;
+    }
+
+    pin_ = pin;
+    return true;
+}
+
+bool DebitCard::changePin(const std::string &old_pin, const std::string &new_pin)
+{
+    if(old_pin != pin_ || new_pin.empty()) {return false;}
+    pin_ = new_pin;
+    return true;
+}
+
+bool DebitCard::processPayment(double amount)
+{
+    if(!isActivated()) {return false;}
+    auto account = linked_account_.lock();
+    if(!account || amount > account->getAccountBalance())
+    {
+        return false;
+    }
+    return account->applyWithdraw(amount);
+}
+
+bool DebitCard::validate() const
+{
+    return Card::validate() && !pin_.empty() && daily_withdrawal_limit_ > 0;
+}
