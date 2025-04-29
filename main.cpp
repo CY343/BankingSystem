@@ -1,64 +1,170 @@
-#include "Customers.hpp"
-#include "BankAccount.hpp"
+#include <iostream>
+#include <memory>
+#include "Card.hpp"
 #include "CreditCard.hpp"
+#include "DebitCard.hpp"
+#include "BankAccount.hpp"
+#include "Customers.hpp"
 #include "Services.hpp"
 
-int main()
-{
-    // Create some customers
-    std::shared_ptr<Customers> customer1 = std::make_shared<Customers>("Alice", "alice@example.com", "", 30);
-    std::shared_ptr<Customers> customer2 = std::make_shared<Customers>("Bob", "bob@example.com", "1987654321", 40);
+void testCard() {
+    std::cout << "\n=== TESTING CARD BASE CLASS ===\n";
+    // Can't instantiate Card directly (abstract), but test through derived classes
+    std::cout << "Card is abstract - tested via CreditCard/DebitCard\n";
+}
 
-    // Display customer details
-    customer1->display();
-    customer2->display();
-
-    // Create a BankAccount for Alice
-    std::shared_ptr<BankAccount> aliceAccount = std::make_shared<BankAccount>(1000.0, 200.0, 800.0,5.0, 101);
-    customer1->linkAccount(aliceAccount); // Linking account to Alice
-
-    // Create Credit Card for Alice
-    std::shared_ptr<CreditCard> aliceCreditCard = std::make_shared<CreditCard>("1234-5678-9876-5432", "12/24", "123", 5000.0, true);
-    std::vector<std::shared_ptr<CreditCard>> aliceCards = {aliceCreditCard};
-    customer1->setCreditCard(aliceCards); // Assign credit card to Alice
-
-    // Create BankAccount for Bob
-    std::shared_ptr<BankAccount> bobAccount = std::make_shared<BankAccount>(500.0, 100.0, 400.0, 3.0, 102);
-    customer2->linkAccount(bobAccount); // Linking account to Bob
+void testCreditCard() {
+    std::cout << "\n=== TESTING CREDIT CARD ===\n";
     
-    // Create Credit Card for Bob
-    std::shared_ptr<CreditCard> bobCreditCard = std::make_shared<CreditCard>("4321-8765-5678-1234", "11/23", "321", 3000.0, true);
-    std::vector<std::shared_ptr<CreditCard>> bobCards = {bobCreditCard};
-    customer2->setCreditCard(bobCards); // Assign credit card to Bob
-
-    // Check if the credit card is activated.
-    std::cout << "Is Bob's credit card activated? " << (bobCreditCard->isActivated() ? "Yes" : "No") << std::endl;
-
-    // Issue a Credit Card using Services class
-    Services bankService;
-    bankService.issueCreditCardToCustomers(customer1, aliceAccount, "5678-1234-4321-8765", "10/25", "456", 8000.0, true);
-
-    // Print customers again to see changes
-    customer1->display();
-    customer2->display();
-
-    // Show account balances
-    std::cout << "Alice's account balance: " << aliceAccount->getAccountBalance() << std::endl;
-    std::cout << "Bob's account balance: " << bobAccount->getAccountBalance() << std::endl;
-
-    // Withdraw money from Alice's account
-    aliceAccount->applyWithdraw(150.0);
-    std::cout << "Alice's account balance after withdrawal: " << aliceAccount->getAccountBalance() << std::endl;
-
-    // Deposit money into Bob's account
-    bobAccount->applyDeposit(50.0);
-    std::cout << "Bob's account balance after deposit: " << bobAccount->getAccountBalance() << std::endl;
-
-    // Check if customers have credit cards
-    std::cout << "Does Alice have a credit card? " << (customer1->hasCreditCard() ? "Yes" : "No") << std::endl;
-    std::cout << "Does Bob have a credit card? " << (customer2->hasCreditCard() ? "Yes" : "No") << std::endl;
+    // Test constructor
+    auto cc = std::make_shared<CreditCard>("4111111111111111", "12/25", "123", false, 5000.0);
     
-    // Check if low balance
-    std::cout << "Does Bob have a low balance? " << (bobAccount->isLowBalance() ? "Yes" : "No") << std::endl;
+    // Test getters
+    std::cout << "Card Number: " << cc->getCardNumber() << "\n";
+    std::cout << "Credit Limit: $" << cc->getCreditLimit() << "\n";
+    std::cout << "Activated: " << (cc->isActivated() ? "Yes" : "No") << "\n";
+    
+    // Test validation
+    std::cout << "Valid: " << (cc->validate() ? "Yes" : "No") << "\n";
+    
+    // Test payment processing
+    std::cout << "Process $100 payment: " 
+              << (cc->processPayment(100.0) ? "Success" : "Failed") << "\n";
+    
+    // Activate and retest
+    cc->setActivated(true);
+    std::cout << "After activation - Process $100 payment: " 
+              << (cc->processPayment(100.0) ? "Success" : "Failed") << "\n";
+    
+    // Test limit change
+    try {
+        cc->setCreditLimit(3000.0);
+        std::cout << "New limit set to $" << cc->getCreditLimit() << "\n";
+    } catch(const std::exception& e) {
+        std::cerr << "Error: " << e.what() << "\n";
+    }
+}
+
+void testDebitCard() {
+    std::cout << "\n=== TESTING DEBIT CARD ===\n";
+    
+    // Create bank account first
+    auto account = std::make_shared<BankAccount>();
+    account->applyDeposit(1000.0);
+    
+    // Test constructor
+    auto dc = std::make_shared<DebitCard>("5222222222222222", "06/26", "456", true, 
+                                        1000.0, 0.0, "1234", true, account);
+    
+    // Test getters
+    std::cout << "Card Number: " << dc->getCardNumber() << "\n";
+    std::cout << "Daily Limit: $" << dc->getDailyWithdrawalLimit() << "\n";
+    std::cout << "Linked Account Balance: $" 
+              << dc->getLinkedAccount().lock()->getAccountBalance() << "\n";
+
+    // Test payment processing
+    std::cout << "Process $200 payment: " 
+              << (dc->processPayment(200.0) ? "Success" : "Failed") << "\n";
+    std::cout << "New Balance: $" 
+              << dc->getLinkedAccount().lock()->getAccountBalance() << "\n";
+    
+    // Test PIN change
+    std::cout << "Change PIN (1234->5678): " 
+              << (dc->changePin("1234", "5678") ? "Success" : "Failed") << "\n";
+    std::cout << "Wrong PIN change attempt: " 
+              << (dc->changePin("wrong", "0000") ? "Success" : "Failed") << "\n";
+}
+
+void testBankAccount() {
+    std::cout << "\n=== TESTING BANK ACCOUNT ===\n";
+    
+    auto account = std::make_shared<BankAccount>();
+    
+    // Test deposits
+    account->applyDeposit(500.0);
+    std::cout << "Balance after $500 deposit: $" << account->getAccountBalance() << "\n";
+    
+    // Test withdrawals
+    std::cout << "Withdraw $200: " 
+              << (account->applyWithdraw(200.0) ? "Success" : "Failed") << "\n";
+    std::cout << "Balance: $" << account->getAccountBalance() << "\n";
+    
+    // Test low balance
+    std::cout << "Low Balance: " << (account->isLowBalance() ? "Yes" : "No") << "\n";
+    
+    // Test credit card addition
+    account->addCreditCard("3333444455556666", "09/27", "789", 2000.0, true);
+    std::cout << "Added credit card to account\n";
+}
+
+void testCustomer() {
+    std::cout << "\n=== TESTING CUSTOMER ===\n";
+    
+    auto customer = std::make_shared<Customers>("John Doe", "john@example.com", "1555123456", 30);
+    
+    // Test display
+    customer->display();
+    
+    // Test account linking
+    auto account = std::make_shared<BankAccount>();
+    account->applyDeposit(1500.0);
+    customer->linkAccount(account);
+    
+    std::cout << "Linked Account Balance: $" 
+              << customer->getAccount()->getAccountBalance() << "\n";
+    
+    // Test credit card
+    std::vector<std::shared_ptr<CreditCard>> cards;
+    cards.push_back(std::make_shared<CreditCard>("4111111111111111", "12/25", "123", true, 5000.0));
+    customer->setCreditCard(cards);
+    
+    std::cout << "Has Credit Card: " << (customer->hasCreditCard() ? "Yes" : "No") << "\n";
+}
+
+void testServices() {
+    std::cout << "\n=== TESTING SERVICES ===\n";
+    
+    Services bankServices;
+    
+    // Create customers
+    auto customer1 = std::make_shared<Customers>("Alice", "alice@bank.com", "1555111222", 28);
+    auto customer2 = std::make_shared<Customers>("Bob", "bob@bank.com", "1555333444", 35);
+    
+    // Test adding customers
+    std::vector<std::shared_ptr<Customers>> newCustomers = {customer1, customer2};
+    bankServices.addCustomers(newCustomers);
+    std::cout << "Customer Count: " << bankServices.getCustomers().size() << "\n";
+    
+    // Test account opening
+    bankServices.openAccount();
+    
+    // Test credit card issuance
+    auto account = std::make_shared<BankAccount>();
+    account->applyDeposit(2000.0);
+    customer1->linkAccount(account);
+    
+    bankServices.issueCreditCardToCustomers(
+        customer1, account, "4444555566667777", "10/28", "321", 3000.0, true);
+    
+    std::cout << "Credit card issued to Alice\n";
+    
+    // Test customer deletion
+    std::vector<std::shared_ptr<Customers>> toDelete = {customer2};
+    bankServices.deleteCustomers(toDelete);
+    std::cout << "After deletion - Customer Count: " 
+              << bankServices.getCustomers().size() << "\n";
+}
+
+int main() {
+    std::cout << "=== BANKING SYSTEM TEST ===\n";
+    
+    testCard();
+    testCreditCard();
+    testDebitCard();
+    testBankAccount();
+    testCustomer();
+    testServices();
+    
+    std::cout << "\n=== ALL TESTS COMPLETED ===\n";
     return 0;
 }

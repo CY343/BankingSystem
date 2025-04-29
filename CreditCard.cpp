@@ -10,7 +10,7 @@ CreditCard::CreditCard(const std::string &number, const std::string &expiration,
 
 CreditCard::~CreditCard() {}
 
-bool CreditCard::setCreditLimit(double &limit)
+bool CreditCard::setCreditLimit(double limit)
 {
     if (limit >= 0)
     {

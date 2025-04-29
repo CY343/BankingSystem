@@ -13,7 +13,7 @@ class CreditCard: public Card{
         CreditCard(const std::string& credit_card_number, const std::string& expiration, const std::string& cvv, const bool& isActivated, const double& credit_limit);
         ~CreditCard();
         double getCreditLimit()const;
-        bool setCreditLimit(double& limit);
+        bool setCreditLimit(double limit);
         virtual bool validate() const override;
         virtual bool processPayment(double amount) override;
 };

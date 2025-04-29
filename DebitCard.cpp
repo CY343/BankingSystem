@@ -28,6 +28,11 @@ std::string DebitCard::getPin() const
     return pin_;
 }
 
+std::weak_ptr<BankAccount> DebitCard::getLinkedAccount() const
+{
+    return linked_account_;
+}
+
 bool DebitCard::SetDailySpendAmount(const double &amount)
 {
     daily_spend_amount_ = amount;
@@ -73,4 +78,12 @@ bool DebitCard::processPayment(double amount)
 bool DebitCard::validate() const
 {
     return Card::validate() && !pin_.empty() && daily_withdrawal_limit_ > 0;
+}
+
+bool DebitCard::isContactlessEnabled() const {
+    return contactless_enable_;
+}
+
+void DebitCard::enableContactless(bool enable) {
+    contactless_enable_ = enable;
 }

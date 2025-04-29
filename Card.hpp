@@ -13,7 +13,6 @@ class Card{
 
     protected:
     void setCardNumber(const std::string& number);
-    std::string getCardNumber() const ;
     void setExpiration(const std::string& expiration);
     std::string getExpiration() const;
     void setCvv(const std::string& cvv);
@@ -27,7 +26,7 @@ class Card{
         void setActivated(bool isActivate);
         virtual bool processPayment(double amount) = 0; 
         virtual bool validate() const;
-
+        std::string getCardNumber() const ;
 
 
 };

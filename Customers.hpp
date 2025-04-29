@@ -4,9 +4,9 @@
 #include<string>
 #include<memory>
 #include<vector>
+#include"BankAccount.hpp"
+#include"CreditCard.hpp"
 
-class BankAccount;
-class CreditCard;
 
 class Customers{
     private:

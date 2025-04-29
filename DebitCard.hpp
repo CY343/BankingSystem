@@ -23,6 +23,8 @@ class DebitCard : public Card{
         double getDailySpendAmount() const;
         std::string getPin() const;
         std::weak_ptr<BankAccount> getLinkedAccount() const;
+        bool isContactlessEnabled() const;
+        void enableContactless(bool enable);
 
         bool SetDailySpendAmount(const double& amount);
         bool SetDailyWithdrawalLimit(const double& limit);
