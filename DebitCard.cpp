@@ -1,16 +1,21 @@
 #include"DebitCard.hpp"
+#include"BankAccount.hpp"
 #include<iostream>
 #include<string>
 
-DebitCard::DebitCard():Card("None", "None", "NONE", false),daily_withdrawal_limit_(0.0), daily_spend_amount_(0.0), pin_("None"), contactless_enable_(false){}
+DebitCard::DebitCard():Card("None", "None", "NONE", false), daily_withdrawal_limit_(0.0), daily_spend_amount_(0.0), pin_("None"), contactless_enable_(false){}
 
 DebitCard::DebitCard(const std::string &number, const std::string &expiration, const std::string &cvv, const bool &isActivated,
-const double& daily_withdrawal_limit, const double& daily_spend_amount, const std::string& pin, const bool contactless_enable,std::shared_ptr<BankAccount> account)
-:Card(number, expiration, cvv, isActivated),daily_withdrawal_limit_(daily_withdrawal_limit), daily_spend_amount_(daily_spend_amount), pin_(pin), contactless_enable_(contactless_enable), linked_account_(account)
+const double& daily_withdrawal_limit, const double& daily_spend_amount, const std::string& pin, const bool enable,std::shared_ptr<BankAccount> account)
+:Card(number, expiration, cvv, isActivated),daily_withdrawal_limit_(daily_withdrawal_limit), daily_spend_amount_(daily_spend_amount), contactless_enable_(enable), linked_debit_card_account_(account)
  {
-    setPin(pin);
+    if(!setPin(pin))
+    {
+        std::cout << "INVALID PIN! " << std::endl;
+        pin_ = "0000";
+    }
  }
-
+ 
 DebitCard::~DebitCard(){}
 
 double DebitCard::getDailyWithdrawalLimit() const
@@ -30,8 +35,9 @@ std::string DebitCard::getPin() const
 
 std::weak_ptr<BankAccount> DebitCard::getLinkedAccount() const
 {
-    return linked_account_;
+    return linked_debit_card_account_;
 }
+
 
 bool DebitCard::SetDailySpendAmount(const double &amount)
 {
@@ -59,15 +65,24 @@ bool DebitCard::setPin(const std::string &pin)
 
 bool DebitCard::changePin(const std::string &old_pin, const std::string &new_pin)
 {
-    if(old_pin != pin_ || new_pin.empty()) {return false;}
-    pin_ = new_pin;
+    if(old_pin != pin_ )
+    {
+        std::cout << "Error: YOUR OLD PIN DOESN'T MATCH! " << std::endl;
+        return false;
+    }
+    
+    if(new_pin.empty() || !setPin(new_pin))
+    {
+        std::cout << "Erorr: Your NEW PIN IS INVALID! " << std::endl;
+        return false;
+    }
     return true;
 }
 
 bool DebitCard::processPayment(double amount)
 {
     if(!isActivated()) {return false;}
-    auto account = linked_account_.lock();
+    auto account = linked_debit_card_account_.lock();
     if(!account || amount > account->getAccountBalance())
     {
         return false;

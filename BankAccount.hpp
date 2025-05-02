@@ -3,10 +3,11 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include "CreditCard.hpp"
 #include <memory>
 
-class Customers;
+class CreditCard;
+class DebitCard;
+
 
 class BankAccount
 {
@@ -17,8 +18,8 @@ private:
     bool hasLowBalance_;
     double earning_interest_rate_;
     int account_number_;
-    std::vector<std::shared_ptr<Customers>> customers;
     std::vector<std::shared_ptr<CreditCard>> creditCards_;
+    std::shared_ptr<DebitCard> debitCard_;
     // std::vector<Transaction*> transaction_;
 
 public:
@@ -36,7 +37,7 @@ public:
     bool setEarningInterestRate(const double &interest_rate);
     bool applyDeposit(const double &amount);
     bool applyWithdraw(const double &amount);
-    void addCreditCard(const std::string &credit_card_num, const std::string &expiration_date, const std::string &cvv_num, double creditLimit, bool isActivated);
+    void addCreditCard(const std::string &credit_card_num, const std::string &expiration_date, const std::string &cvv_num, double creditLimit, bool isActivated, std::shared_ptr<BankAccount> account);
     int getAccountNumber() const;
 };
 

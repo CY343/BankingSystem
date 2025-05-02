@@ -2,8 +2,8 @@
 
 Card::Card():card_number_("NONE"), expiration_("NONE"), cvv_("None"), isActivated_(false){}
 
-Card::Card(const std::string& number, const std::string& expiration, const std::string cvv, const bool isActivated):
-card_number_(number), expiration_(expiration), cvv_(cvv), isActivated_(isActivated) {}
+Card::Card(const std::string& number, const std::string& expiration, const std::string cvv, const bool isActivated, const bool isExpired):
+card_number_(number), expiration_(expiration), cvv_(cvv), isActivated_(isActivated), isExpired_(isExpired){}
 
 Card::~Card() {}
 
@@ -30,6 +30,11 @@ void Card::setCardNumber(const std::string& number)
 std::string Card::getCardNumber() const
 {
     return card_number_;
+}
+
+bool Card::isExpired(int issue_date) const
+{
+    
 }
 
 void Card::setExpiration(const std::string &expiration)

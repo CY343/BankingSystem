@@ -17,7 +17,8 @@ void testCreditCard() {
     std::cout << "\n=== TESTING CREDIT CARD ===\n";
     
     // Test constructor
-    auto cc = std::make_shared<CreditCard>("4111111111111111", "12/25", "123", false, 5000.0);
+    auto account1 = std::make_shared<BankAccount>();
+    auto cc = std::make_shared<CreditCard>("4111111111111111", "12/25", "123", false, 5000.0, account1 );
     
     // Test getters
     std::cout << "Card Number: " << cc->getCardNumber() << "\n";
@@ -54,13 +55,16 @@ void testDebitCard() {
     
     // Test constructor
     auto dc = std::make_shared<DebitCard>("5222222222222222", "06/26", "456", true, 
-                                        1000.0, 0.0, "1234", true, account);
+                                        1000.0, 0.0, "2345", true, account);
     
+    // set daily amount.                                  
+    dc->SetDailySpendAmount(500.0);
     // Test getters
     std::cout << "Card Number: " << dc->getCardNumber() << "\n";
     std::cout << "Daily Limit: $" << dc->getDailyWithdrawalLimit() << "\n";
     std::cout << "Linked Account Balance: $" 
               << dc->getLinkedAccount().lock()->getAccountBalance() << "\n";
+    std::cout << "Daily Spend Amount: $" << dc->getDailySpendAmount() << std::endl;
 
     // Test payment processing
     std::cout << "Process $200 payment: " 
@@ -69,10 +73,10 @@ void testDebitCard() {
               << dc->getLinkedAccount().lock()->getAccountBalance() << "\n";
     
     // Test PIN change
-    std::cout << "Change PIN (1234->5678): " 
-              << (dc->changePin("1234", "5678") ? "Success" : "Failed") << "\n";
+    std::cout << "Change PIN (2345->7770): " 
+              << (dc->changePin("2345", "7770") ? "Success" : "Failed") << "\n";
     std::cout << "Wrong PIN change attempt: " 
-              << (dc->changePin("wrong", "0000") ? "Success" : "Failed") << "\n";
+              << (dc->changePin("90909", "0000") ? "Success" : "Failed") << "\n";
 }
 
 void testBankAccount() {
@@ -93,7 +97,7 @@ void testBankAccount() {
     std::cout << "Low Balance: " << (account->isLowBalance() ? "Yes" : "No") << "\n";
     
     // Test credit card addition
-    account->addCreditCard("3333444455556666", "09/27", "789", 2000.0, true);
+    account->addCreditCard("3333444455556666", "09/27", "789", 2000.0, true, account);
     std::cout << "Added credit card to account\n";
 }
 
@@ -108,14 +112,14 @@ void testCustomer() {
     // Test account linking
     auto account = std::make_shared<BankAccount>();
     account->applyDeposit(1500.0);
-    customer->linkAccount(account);
+    customer->linkAccount({account});
     
     std::cout << "Linked Account Balance: $" 
-              << customer->getAccount()->getAccountBalance() << "\n";
+              << customer->getAccount()[0]->getAccountBalance() << "\n";
     
     // Test credit card
     std::vector<std::shared_ptr<CreditCard>> cards;
-    cards.push_back(std::make_shared<CreditCard>("4111111111111111", "12/25", "123", true, 5000.0));
+    cards.push_back(std::make_shared<CreditCard>("4111111111111111", "12/25", "123", true, 5000.0, account));
     customer->setCreditCard(cards);
     
     std::cout << "Has Credit Card: " << (customer->hasCreditCard() ? "Yes" : "No") << "\n";
@@ -137,11 +141,12 @@ void testServices() {
     
     // Test account opening
     bankServices.openAccount();
-    
+    // Test account closing
+    bankServices.closeAccount(1);
     // Test credit card issuance
     auto account = std::make_shared<BankAccount>();
     account->applyDeposit(2000.0);
-    customer1->linkAccount(account);
+    customer1->linkAccount({account});
     
     bankServices.issueCreditCardToCustomers(
         customer1, account, "4444555566667777", "10/28", "321", 3000.0, true);
@@ -158,12 +163,12 @@ void testServices() {
 int main() {
     std::cout << "=== BANKING SYSTEM TEST ===\n";
     
-    testCard();
+   testCard();
     testCreditCard();
     testDebitCard();
     testBankAccount();
     testCustomer();
-    testServices();
+     testServices(); 
     
     std::cout << "\n=== ALL TESTS COMPLETED ===\n";
     return 0;

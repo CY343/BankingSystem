@@ -52,6 +52,17 @@ bool Services::openAccount()
     return true;
 }
 
+bool Services::closeAccount(size_t index)
+{
+   if(index >= accounts_.size())
+   {
+    return false;
+   }
+   accounts_.erase(accounts_.begin() + index);
+   return true;
+    
+}
+
 void Services::issueCreditCardToCustomers(std::shared_ptr<Customers> customers, std::shared_ptr<BankAccount> account, const std::string &cardNumber, const std::string &expiration, const std::string &cvv, double creditLimit, bool isActivated)
 {
     if(!customers)
@@ -67,6 +78,6 @@ void Services::issueCreditCardToCustomers(std::shared_ptr<Customers> customers, 
         return;
     }
 
-    accounts->addCreditCard(cardNumber, expiration, cvv, creditLimit, isActivated);
+    accounts[0]->addCreditCard(cardNumber, expiration, cvv, creditLimit, isActivated, account);
     
 }

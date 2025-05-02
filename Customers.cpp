@@ -36,7 +36,7 @@ bool Customers::setName(const std::string& name)
     
     for(size_t i = 0; i < name.size(); i++)
     {
-        if(!isalpha(name[i]))
+        if(!isalpha(name[i]) && name[i] != ' ')
         {
             std::cout << "Please enter a valid name!" << std::endl;
             return false;
@@ -125,12 +125,12 @@ void Customers::display() const
     std::cout << "Age: " << getAge() << std::endl;
 }
 
-void Customers::linkAccount(std::shared_ptr<BankAccount> account)
+void Customers::linkAccount(const std::vector<std::shared_ptr<BankAccount>>& account)
 {
     account_ = account;
 }
 
-std::shared_ptr<BankAccount> Customers::getAccount()const
+std::vector<std::shared_ptr<BankAccount>> Customers::getAccount()const
 {
     return account_;
 }

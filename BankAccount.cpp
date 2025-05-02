@@ -1,4 +1,5 @@
 #include "BankAccount.hpp"
+#include "CreditCard.hpp"
 #include <iostream>
 #include <string>
 
@@ -13,7 +14,7 @@ BankAccount::BankAccount()
 }
 
 BankAccount::BankAccount(const double &deposit, const double &withdrawal, const double &account_balance, const double &earning_interest_rate, const int &account_number)
-    : deposit_(deposit), withdrawal_(withdrawal), account_balance_(account_balance), earning_interest_rate_(earning_interest_rate), account_number_(account_number), customers() 
+    : deposit_(deposit), withdrawal_(withdrawal), account_balance_(account_balance), earning_interest_rate_(earning_interest_rate), account_number_(account_number)
     {
         setLowBalance();
     }
@@ -76,9 +77,9 @@ bool BankAccount::applyWithdraw(const double &amount)
     return true;
 }
 
-void BankAccount::addCreditCard(const std::string &credit_card_num, const std::string &expiration_date, const std::string &cvv_num, double creditLimit, bool isActivated)
+void BankAccount::addCreditCard(const std::string &credit_card_num, const std::string &expiration_date, const std::string &cvv_num, double creditLimit, bool isActivated, std::shared_ptr<BankAccount> account)
 {
-    creditCards_.emplace_back(std::make_shared<CreditCard>(credit_card_num, expiration_date, cvv_num, creditLimit, isActivated));
+    creditCards_.emplace_back(std::make_shared<CreditCard>(credit_card_num, expiration_date, cvv_num, creditLimit, isActivated, account));
 }
 
 int BankAccount::getAccountNumber() const

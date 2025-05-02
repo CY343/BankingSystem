@@ -1,12 +1,13 @@
 #include "CreditCard.hpp"
+#include"BankAccount.hpp"
 #include <iostream>
 #include <string>
 
 CreditCard::CreditCard():Card("None", "None", "None", false), credit_limit_(0){}
 
 
-CreditCard::CreditCard(const std::string &number, const std::string &expiration, const std::string &cvv, const bool &isActivated, const double &credit_limit)
-    : Card(number, expiration, cvv, isActivated), credit_limit_(credit_limit){}
+CreditCard::CreditCard(const std::string &number, const std::string &expiration, const std::string &cvv, const bool &isActivated, const double &credit_limit, std::shared_ptr<BankAccount> account)
+    : Card(number, expiration, cvv, isActivated), credit_limit_(credit_limit), linked_credit_card_account(account){}
 
 CreditCard::~CreditCard() {}
 
@@ -19,6 +20,11 @@ bool CreditCard::setCreditLimit(double limit)
     }
     else
         throw std::invalid_argument("Credit limit is invaild. ");
+}
+
+std::weak_ptr<BankAccount> CreditCard::getLinkedAccount()
+{
+    return linked_credit_card_account;
 }
 
 double CreditCard::getCreditLimit()const

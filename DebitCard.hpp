@@ -4,7 +4,8 @@
 #include<iostream>
 #include<string>
 #include<memory>
-#include"BankAccount.hpp"
+
+class BankAccount;
 
 class DebitCard : public Card{
     private:
@@ -12,11 +13,11 @@ class DebitCard : public Card{
         double daily_spend_amount_;
         std::string pin_;
         bool contactless_enable_;
-        std::weak_ptr<BankAccount> linked_account_;
+        std::weak_ptr<BankAccount> linked_debit_card_account_;
     public:
         DebitCard();
-        DebitCard(const std::string& credit_card_number, const std::string& expiration, const std::string& cvv, const bool& isActivated,
-        const double& daily_withdrawal_limit, const double& daily_spend_amount, const std::string& pin, const bool contactless_enable,std::shared_ptr<BankAccount> account);
+        DebitCard(const std::string& number, const std::string& expiration, const std::string& cvv, const bool& isActivated,
+        const double& daily_withdrawal_limit, const double& daily_spend_amount, const std::string& pin, const bool enable, std::shared_ptr<BankAccount> account);
         ~DebitCard();
 
         double getDailyWithdrawalLimit() const;
@@ -33,6 +34,7 @@ class DebitCard : public Card{
         
         bool processPayment(double amount) override;
         bool validate() const override;
+        
 
 
 
