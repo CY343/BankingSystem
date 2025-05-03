@@ -19,9 +19,6 @@ BankAccount::BankAccount(const double &deposit, const double &withdrawal, const 
         setLowBalance();
     }
 
-BankAccount::~BankAccount()
-{
-}
 
 double BankAccount::getDeposit() const
 {
@@ -77,9 +74,9 @@ bool BankAccount::applyWithdraw(const double &amount)
     return true;
 }
 
-void BankAccount::addCreditCard(const std::string &credit_card_num, const std::string &expiration_date, const std::string &cvv_num, double creditLimit, bool isActivated, std::shared_ptr<BankAccount> account)
+void BankAccount::addCreditCard(const std::string &credit_card_num, const std::string &expiration_date, const std::string &cvv_num, double creditLimit, bool isActivated, std::shared_ptr<BankAccount> account, const bool isExpired)
 {
-    creditCards_.emplace_back(std::make_shared<CreditCard>(credit_card_num, expiration_date, cvv_num, creditLimit, isActivated, account));
+    creditCards_.emplace_back(std::make_shared<CreditCard>(credit_card_num, expiration_date, cvv_num, creditLimit, isActivated, account, isExpired));
 }
 
 int BankAccount::getAccountNumber() const

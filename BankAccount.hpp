@@ -25,7 +25,6 @@ private:
 public:
     BankAccount();
     BankAccount(const double &deposit, const double &withdrawal, const double &account_balance, const double &earning_interest_rate, const int &account_number);
-    ~BankAccount();
     double getDeposit() const;
     bool setDeposit(const double &deposit);
     double getWithdrawal() const;
@@ -37,7 +36,7 @@ public:
     bool setEarningInterestRate(const double &interest_rate);
     bool applyDeposit(const double &amount);
     bool applyWithdraw(const double &amount);
-    void addCreditCard(const std::string &credit_card_num, const std::string &expiration_date, const std::string &cvv_num, double creditLimit, bool isActivated, std::shared_ptr<BankAccount> account);
+    void addCreditCard(const std::string &credit_card_num, const std::string &expiration_date, const std::string &cvv_num, double creditLimit, bool isActivated, std::shared_ptr<BankAccount> account, const bool isExpired);
     int getAccountNumber() const;
 };
 

@@ -22,7 +22,6 @@ class Customers{
     public:
         Customers();
         Customers(const std::string& name, const std::string& email, const std::string& phone_number, int age);
-        ~Customers();
         std::string getName() const;
         bool setName(const std::string& name);
         std::string getEmail()const;

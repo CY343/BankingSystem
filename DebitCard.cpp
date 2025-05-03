@@ -3,11 +3,11 @@
 #include<iostream>
 #include<string>
 
-DebitCard::DebitCard():Card("None", "None", "NONE", false), daily_withdrawal_limit_(0.0), daily_spend_amount_(0.0), pin_("None"), contactless_enable_(false){}
+DebitCard::DebitCard():Card("None", "None", "NONE", false, false), daily_withdrawal_limit_(0.0), daily_spend_amount_(0.0), pin_("None"), contactless_enable_(false){}
 
 DebitCard::DebitCard(const std::string &number, const std::string &expiration, const std::string &cvv, const bool &isActivated,
-const double& daily_withdrawal_limit, const double& daily_spend_amount, const std::string& pin, const bool enable,std::shared_ptr<BankAccount> account)
-:Card(number, expiration, cvv, isActivated),daily_withdrawal_limit_(daily_withdrawal_limit), daily_spend_amount_(daily_spend_amount), contactless_enable_(enable), linked_debit_card_account_(account)
+const double& daily_withdrawal_limit, const double& daily_spend_amount, const std::string& pin, const bool enable,std::shared_ptr<BankAccount> account, const bool isExpired)
+:Card(number, expiration, cvv, isActivated, isExpired),daily_withdrawal_limit_(daily_withdrawal_limit), daily_spend_amount_(daily_spend_amount), contactless_enable_(enable), linked_debit_card_account_(account)
  {
     if(!setPin(pin))
     {
@@ -16,7 +16,6 @@ const double& daily_withdrawal_limit, const double& daily_spend_amount, const st
     }
  }
  
-DebitCard::~DebitCard(){}
 
 double DebitCard::getDailyWithdrawalLimit() const
 {
@@ -93,6 +92,11 @@ bool DebitCard::processPayment(double amount)
 bool DebitCard::validate() const
 {
     return Card::validate() && !pin_.empty() && daily_withdrawal_limit_ > 0;
+}
+
+bool DebitCard::checkIfExpired()
+{
+    return isExpired();
 }
 
 bool DebitCard::isContactlessEnabled() const {

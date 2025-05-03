@@ -24,7 +24,6 @@ Customers::Customers(const std::string& name, const std::string& email, const st
     }
 }
 
-Customers::~Customers() {}
 
 std::string Customers::getName()const
 {
@@ -93,7 +92,7 @@ bool Customers::setPhoneNumber(const std::string& phone_number)
         }
     }
     
-        if(phone_number[0] != '1' || phone_number.empty()|| phone_number.size() != 10)
+        if(phone_number.empty()||phone_number[0] != '1' || phone_number.size() != 10)
         {
             std::cout << "Phone number is invalid" << std::endl;
             return false;

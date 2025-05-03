@@ -4,9 +4,6 @@
 
 Services::Services(){};
 
-Services::~Services() = default;
-
-
 
 bool Services::addCustomers(const std::vector<std::shared_ptr<Customers>>& NewCustomers)
 {
@@ -63,7 +60,7 @@ bool Services::closeAccount(size_t index)
     
 }
 
-void Services::issueCreditCardToCustomers(std::shared_ptr<Customers> customers, std::shared_ptr<BankAccount> account, const std::string &cardNumber, const std::string &expiration, const std::string &cvv, double creditLimit, bool isActivated)
+void Services::issueCreditCardToCustomers(std::shared_ptr<Customers> customers, std::shared_ptr<BankAccount> account, const std::string &cardNumber, const std::string &expiration, const std::string &cvv, double creditLimit, bool isActivated, const bool isExpired)
 {
     if(!customers)
     {
@@ -78,6 +75,6 @@ void Services::issueCreditCardToCustomers(std::shared_ptr<Customers> customers, 
         return;
     }
 
-    accounts[0]->addCreditCard(cardNumber, expiration, cvv, creditLimit, isActivated, account);
+    accounts[0]->addCreditCard(cardNumber, expiration, cvv, creditLimit, isActivated, account, isExpired);
     
 }

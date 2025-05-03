@@ -3,6 +3,8 @@
 #include<iostream>
 #include<string>
 #include<vector>
+#include<regex>
+#include<ctime>
 
 class Card{
     private:
@@ -11,10 +13,11 @@ class Card{
         std::string cvv_;
         bool isActivated_;
         bool isExpired_;
+        std::string expirationDate;
 
     protected:
     void setCardNumber(const std::string& number);
-    void setExpiration(const std::string& expiration);
+    virtual void setExpiration(const std::string& expiration);
     std::string getExpiration() const;
     void setCvv(const std::string& cvv);
     std::string getCvv()const;
@@ -22,13 +25,13 @@ class Card{
     public:
         Card(); 
         Card(const std::string& number, const std::string& expiration, const std::string cvv, const bool isActivated, const bool isExpired);
-        virtual ~Card();
         bool isActivated() const;
         void setActivated(bool isActivate);
         virtual bool processPayment(double amount) = 0; 
         virtual bool validate() const;
         std::string getCardNumber() const ;
-        bool isExpired(int issue_date) const;
+        virtual bool isExpired() const;
+        virtual bool checkIfExpired() = 0;
 
 
 };

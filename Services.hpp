@@ -15,13 +15,12 @@ class Services{
 
     public:
         Services();
-        ~Services();
         bool addCustomers(const std::vector<std::shared_ptr<Customers>>& NewCustomers);
         bool deleteCustomers(const std::vector<std::shared_ptr<Customers>>& CustomersToDelete);
         const std::vector<std::shared_ptr<Customers>>& getCustomers() const;
         bool openAccount();
         bool closeAccount(size_t index);
-        void issueCreditCardToCustomers(std::shared_ptr<Customers> customers, std::shared_ptr<BankAccount> account, const std::string& cardNumber, const std::string& expiration, const std::string& cvv, double creditLimit, bool isActivated);
+        void issueCreditCardToCustomers(std::shared_ptr<Customers> customers, std::shared_ptr<BankAccount> account, const std::string& cardNumber, const std::string& expiration, const std::string& cvv, double creditLimit, bool isActivated, const bool isExpired);
 
 
     

@@ -18,7 +18,7 @@ void testCreditCard() {
     
     // Test constructor
     auto account1 = std::make_shared<BankAccount>();
-    auto cc = std::make_shared<CreditCard>("4111111111111111", "12/25", "123", false, 5000.0, account1 );
+    auto cc = std::make_shared<CreditCard>("4111111111111111", "12/25", "123", false, 5000.0, account1, false);
     
     // Test getters
     std::cout << "Card Number: " << cc->getCardNumber() << "\n";
@@ -55,10 +55,10 @@ void testDebitCard() {
     
     // Test constructor
     auto dc = std::make_shared<DebitCard>("5222222222222222", "06/26", "456", true, 
-                                        1000.0, 0.0, "2345", true, account);
+                                        1000.0, 0.0, "2345", true, account, false);
     
-    // set daily amount.                                  
-    dc->SetDailySpendAmount(500.0);
+                                      
+    std::cout << "Is the card expired ? " << (dc->checkIfExpired() ? "Yes" : "No") << std::endl;
     // Test getters
     std::cout << "Card Number: " << dc->getCardNumber() << "\n";
     std::cout << "Daily Limit: $" << dc->getDailyWithdrawalLimit() << "\n";
@@ -77,6 +77,7 @@ void testDebitCard() {
               << (dc->changePin("2345", "7770") ? "Success" : "Failed") << "\n";
     std::cout << "Wrong PIN change attempt: " 
               << (dc->changePin("90909", "0000") ? "Success" : "Failed") << "\n";
+
 }
 
 void testBankAccount() {
@@ -97,7 +98,7 @@ void testBankAccount() {
     std::cout << "Low Balance: " << (account->isLowBalance() ? "Yes" : "No") << "\n";
     
     // Test credit card addition
-    account->addCreditCard("3333444455556666", "09/27", "789", 2000.0, true, account);
+    account->addCreditCard("3333444455556666", "09/27", "789", 2000.0, true, account, false);
     std::cout << "Added credit card to account\n";
 }
 
@@ -119,8 +120,9 @@ void testCustomer() {
     
     // Test credit card
     std::vector<std::shared_ptr<CreditCard>> cards;
-    cards.push_back(std::make_shared<CreditCard>("4111111111111111", "12/25", "123", true, 5000.0, account));
+    cards.push_back(std::make_shared<CreditCard>("4111111111111111", "12/25", "123", true, 5000.0, account, false));
     customer->setCreditCard(cards);
+
     
     std::cout << "Has Credit Card: " << (customer->hasCreditCard() ? "Yes" : "No") << "\n";
 }
@@ -149,7 +151,7 @@ void testServices() {
     customer1->linkAccount({account});
     
     bankServices.issueCreditCardToCustomers(
-        customer1, account, "4444555566667777", "10/28", "321", 3000.0, true);
+        customer1, account, "4444555566667777", "10/28", "321", 3000.0, true, false);
     
     std::cout << "Credit card issued to Alice\n";
     
