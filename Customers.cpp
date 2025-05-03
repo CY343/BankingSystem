@@ -60,19 +60,12 @@ std::string Customers::getEmail()const
 
 bool Customers::setEmail(const std::string& email)
 {
-    if(email.find('@') == std::string::npos||email.find('.') == std::string::npos)
+    std::regex pattern(R"(^[A-z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$)", std::regex::icase);
+    if(!std::regex_match(email, pattern))
     {
-        std::cout << "Please enter a vaild email." << std::endl;
         return false;
     }
     customers_email_ = email;
-    for(size_t i = 0; i < customers_email_.size(); i++)
-    {
-        if(customers_email_[i] >= 'a' && customers_email_[i] <= 'z')
-        {
-            customers_email_[i] = std::toupper(customers_email_[i]);
-        }
-    }
     return true;
 }
 

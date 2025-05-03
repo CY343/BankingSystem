@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include"Transaction.hpp"
 
 class CreditCard;
 class DebitCard;
@@ -20,7 +21,7 @@ private:
     int account_number_;
     std::vector<std::shared_ptr<CreditCard>> creditCards_;
     std::shared_ptr<DebitCard> debitCard_;
-    // std::vector<Transaction*> transaction_;
+    std::vector<Transaction*> transaction_;
 
 public:
     BankAccount();
@@ -38,6 +39,7 @@ public:
     bool applyWithdraw(const double &amount);
     void addCreditCard(const std::string &credit_card_num, const std::string &expiration_date, const std::string &cvv_num, double creditLimit, bool isActivated, std::shared_ptr<BankAccount> account, const bool isExpired);
     int getAccountNumber() const;
+    void addTransaction(Transaction::Type type, double amount) const;
 };
 
 #endif

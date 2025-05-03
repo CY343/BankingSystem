@@ -59,6 +59,7 @@ bool BankAccount::applyDeposit(const double &amount)
         return false;
     }
     account_balance_ += amount;
+    
     setLowBalance();
     return true;
 }
@@ -105,4 +106,10 @@ bool BankAccount::setEarningInterestRate(const double &earning_interes_rate)
 {
     earning_interest_rate_ = earning_interes_rate;
     return true;
+}
+
+void BankAccount::addTransaction(Transaction::Type type, double amount) const
+{
+
+    
 }

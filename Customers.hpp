@@ -5,6 +5,7 @@
 #include<string>
 #include<memory>
 #include<vector>
+#include<regex>
 
 class BankAccount;
 class CreditCard;
