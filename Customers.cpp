@@ -1,27 +1,24 @@
 #include"Customers.hpp"
 #include<iostream>
 #include<string>
+#include <stdexcept>
 
-Customers::Customers(){
-         customers_name_ = "NONE";
-         customers_email_ = "NONE";
-         customers_phone_number_ = "NONE";
-         customers_age_ = 0;
-}
+Customers::Customers(): customers_name_("NONE"), customers_email_("NONE"), customers_phone_number_("NONE"), customers_age_(0){}
 
 Customers::Customers(const std::string& name, const std::string& email, const std::string& phone_number, int age)
-: customers_name_(name), customers_email_(email), customers_phone_number_(phone_number), customers_age_(age)
+: customers_name_("NONE"), customers_email_("NONE"), customers_phone_number_("NONE"), customers_age_(0)
 {
+    
+    if (setName(name)) {
+        customers_name_ = name;
+    }
+    if (setEmail(email)) {
+        customers_email_ = email;
+    }
+    if (setPhoneNumber(phone_number)) {
+        customers_phone_number_ = phone_number;
+    }
     setAge(age);
-    if (!setName(name)) {
-        customers_name_ = "NONE";
-    }
-    if (!setEmail(email)) {
-        customers_email_ = "NONE";
-    }
-    if (!setPhoneNumber(phone_number)) {
-        customers_phone_number_ = "NONE";
-    }
 }
 
 
@@ -103,6 +100,10 @@ int Customers::getAge()const
 
 bool Customers::setAge(const int age)
 {
+    if(age < 0)
+    {
+        throw std::invalid_argument("Age cannot be negative.");
+    }
     customers_age_ = age;
     return true;
 }

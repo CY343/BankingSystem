@@ -1,20 +1,15 @@
 #include "BankAccount.hpp"
 #include "CreditCard.hpp"
-#include <iostream>
+#include <iostream> 
 #include <string>
 
-BankAccount::BankAccount()
-{
-    deposit_ = 0.0;
-    withdrawal_ = 0.0;
-    account_balance_ = 0.0;
-    hasLowBalance_ = false;
-    earning_interest_rate_ = 0.0;
-    account_number_ = 0;
-}
+int BankAccount::next_account_number_ = 1000;
 
-BankAccount::BankAccount(const double &deposit, const double &withdrawal, const double &account_balance, const double &earning_interest_rate, const int &account_number)
-    : deposit_(deposit), withdrawal_(withdrawal), account_balance_(account_balance), earning_interest_rate_(earning_interest_rate), account_number_(account_number)
+BankAccount::BankAccount():deposit_(0.0), withdrawal_(0.0),account_balance_(0.0), account_number_(next_account_number_++) {}
+
+
+BankAccount::BankAccount(const double &deposit, const double &withdrawal, const double &account_balance, const double &earning_interest_rate)
+    : deposit_(deposit), withdrawal_(withdrawal), account_balance_(account_balance), earning_interest_rate_(earning_interest_rate), account_number_(next_account_number_++)
     {
         setLowBalance();
     }
@@ -59,18 +54,19 @@ bool BankAccount::applyDeposit(const double &amount)
         return false;
     }
     account_balance_ += amount;
-    
+    transactions_.emplace_back(Transaction::DEPOSIT, amount, std::time(nullptr));
     setLowBalance();
     return true;
 }
 
 bool BankAccount::applyWithdraw(const double &amount)
 {
-    if (amount <= 0 || account_balance_ <= amount)
+    if (amount <= 0 || account_balance_ < amount)
     {
         return false;
     }
     account_balance_ -= amount;
+    transactions_.emplace_back(Transaction::WITHDRAW, amount, std::time(nullptr));
     setLowBalance();
     return true;
 }
@@ -82,6 +78,7 @@ void BankAccount::addCreditCard(const std::string &credit_card_num, const std::s
 
 int BankAccount::getAccountNumber() const
 {
+
     return account_number_;
 }
 
@@ -108,8 +105,9 @@ bool BankAccount::setEarningInterestRate(const double &earning_interes_rate)
     return true;
 }
 
-void BankAccount::addTransaction(Transaction::Type type, double amount) const
-{
+void BankAccount::addTransaction(Transaction::Type type, double amount, time_t timestamp)
+{   
 
+    transactions_.emplace_back(type, amount, timestamp);
     
 }

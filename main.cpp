@@ -142,7 +142,7 @@ void testServices() {
     std::cout << "Customer Count: " << bankServices.getCustomers().size() << "\n";
     
     // Test account opening
-    bankServices.openAccount();
+    bankServices.openAccount(customer1);
     // Test account closing
     bankServices.closeAccount(1);
     // Test credit card issuance

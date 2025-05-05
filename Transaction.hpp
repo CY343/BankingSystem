@@ -7,17 +7,18 @@
 
 class Transaction{
     public:
-        enum Type {DEPOSIT, WITHDRAW};
+        enum Type {DEPOSIT, WITHDRAW, INTEREST};
         Transaction();
-        Transaction(Type type, double amount, time_t tamestamp);
+        Transaction(Type type, double amount, time_t timestamp);
         Type getType() const ;
         double getAmount() const;
         time_t getTimeStamp() const;
+        std::string toString() const;
 
     private:  
         Type type_;
         double amount_;
-        time_t timestamp_;
+        long timestamp_;
     
 };
 
