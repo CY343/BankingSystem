@@ -2,13 +2,12 @@
 #include<iostream>
 #include<string>
 
-SavingAccount::SavingAccount():BankAccount(), min_balance_(500.0), interest_rate_(0.02), withdrawal_times_this_month_(0)
+SavingAccount::SavingAccount():BankAccount(), min_balance_(500.0), withdrawal_times_this_month_(0)
 {
-    setEarningInterestRate(interest_rate_);
 }
 
-SavingAccount::SavingAccount(const double &deposit, const double &withdrawal, const double &account_balance, double min_balance, double interest_rate, int withdrawal_times)
-: BankAccount(deposit, withdrawal, account_balance, interest_rate), min_balance_(min_balance), interest_rate_(interest_rate), withdrawal_times_this_month_(withdrawal_times) {}
+SavingAccount::SavingAccount(const double &deposit, const double &withdrawal, const double &account_balance, const double &interest_rate, double min_balance, int withdrawal_times)
+: BankAccount(deposit, withdrawal, account_balance, interest_rate), min_balance_(min_balance), withdrawal_times_this_month_(withdrawal_times) {}
 
 bool SavingAccount::applyWithdraw(const double& amount)
 {

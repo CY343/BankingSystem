@@ -9,39 +9,11 @@ BankAccount::BankAccount():deposit_(0.0), withdrawal_(0.0),account_balance_(0.0)
  account_number_(next_account_number_++) {}
 
 
-BankAccount::BankAccount(const double &deposit, const double &withdrawal, const double &account_balance, const double &earning_interest_rate)
-    : deposit_(deposit), withdrawal_(withdrawal), account_balance_(account_balance), earning_interest_rate_(earning_interest_rate), account_number_(next_account_number_++)
+BankAccount::BankAccount(const double &deposit, const double &withdrawal, const double &account_balance, const double &interest_rate)
+    : deposit_(deposit), withdrawal_(withdrawal), account_balance_(account_balance),interest_rate_(interest_rate), account_number_(next_account_number_++)
     {
         setLowBalance();
     }
-
-
-double BankAccount::getDeposit() const
-{
-    return deposit_;
-}
-
-bool BankAccount::setDeposit(const double &deposit)
-{
-    deposit_ = deposit;
-    return true;
-}
-
-double BankAccount::getWithdrawal() const
-{
-    return withdrawal_;
-}
-
-bool BankAccount::setWithdrawal(const double &withdrawal)
-{
-    if (account_balance_ < withdrawal)
-    {
-        std::cout << " You have insuffcient funds." << std::endl;
-        return false;
-    }
-    withdrawal_ = withdrawal;
-    return true;
-}
 
 double BankAccount::getAccountBalance() const
 {
@@ -93,12 +65,12 @@ bool BankAccount::isLowBalance() const
 
 double BankAccount::getInterestRate() const
 {
-    return earning_interest_rate_;
+    return interest_rate_;
 }
 
-bool BankAccount::setEarningInterestRate(const double &earning_interes_rate)
+bool BankAccount::setEarningInterestRate(const double &interes_rate)
 {
-    earning_interest_rate_ = earning_interes_rate;
+    interest_rate_ = interes_rate;
     return true;
 }
 

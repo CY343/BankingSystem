@@ -39,7 +39,7 @@ bool Card::isExpired() const
     
     int expiredMonth;
     int expiredYear;
-    std::sscanf(expirationDate.c_str(), "%2d/%2d", &expiredMonth, &expiredYear);
+    std::sscanf(expiration_.c_str(), "%2d/%2d", &expiredMonth, &expiredYear);
     expiredYear += 2000; // adjusting for YY to YYYY
 
     // CHECK IF CARD EXPIRED
@@ -56,7 +56,7 @@ void Card::setExpiration(const std::string &expiration)
 
     if(std::regex_match(expiration, patten))
     {
-        expirationDate = expiration;
+        expiration_ = expiration;
     }
     else
     {

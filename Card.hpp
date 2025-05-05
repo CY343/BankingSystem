@@ -13,7 +13,6 @@ class Card{
         std::string cvv_;
         bool isActivated_;
         bool isExpired_;
-        std::string expirationDate;
 
     protected:
     void setCardNumber(const std::string& number);
