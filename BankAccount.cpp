@@ -5,7 +5,8 @@
 
 int BankAccount::next_account_number_ = 1000;
 
-BankAccount::BankAccount():deposit_(0.0), withdrawal_(0.0),account_balance_(0.0), account_number_(next_account_number_++) {}
+BankAccount::BankAccount():deposit_(0.0), withdrawal_(0.0),account_balance_(0.0),
+ account_number_(next_account_number_++) {}
 
 
 BankAccount::BankAccount(const double &deposit, const double &withdrawal, const double &account_balance, const double &earning_interest_rate)
@@ -71,10 +72,6 @@ bool BankAccount::applyWithdraw(const double &amount)
     return true;
 }
 
-void BankAccount::addCreditCard(const std::string &credit_card_num, const std::string &expiration_date, const std::string &cvv_num, double creditLimit, bool isActivated, std::shared_ptr<BankAccount> account, const bool isExpired)
-{
-    creditCards_.emplace_back(std::make_shared<CreditCard>(credit_card_num, expiration_date, cvv_num, creditLimit, isActivated, account, isExpired));
-}
 
 int BankAccount::getAccountNumber() const
 {

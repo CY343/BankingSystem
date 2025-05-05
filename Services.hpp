@@ -12,18 +12,32 @@
 class Services{
     private:
         std::vector<std::shared_ptr<Customers>> customers_;
-        std::vector<std::shared_ptr<BankAccount>> accounts_;
+        std::vector<std::shared_ptr<BankAccount>> all_accounts_;
 
     public:
         Services();
         bool addCustomers(const std::vector<std::shared_ptr<Customers>>& NewCustomers);
         bool deleteCustomers(const std::vector<std::shared_ptr<Customers>>& CustomersToDelete);
-        const std::vector<std::shared_ptr<Customers>>& getCustomers() const;
-        std::shared_ptr<BankAccount> openAccount(std::shared_ptr<Customers> custumer);
-        bool closeAccount(int account_number);
-        void issueCreditCardToCustomers(std::shared_ptr<Customers> customers, std::shared_ptr<BankAccount> account, const std::string& cardNumber, const std::string& expiration, const std::string& cvv, double creditLimit, bool isActivated, const bool isExpired);
-        std::shared_ptr<SavingAccount> openSavingAccount(std::shared_ptr<Customers> customer, double min_balance = 500.0, double interest_rate = 0.02);
 
+      
+        const std::vector<std::shared_ptr<Customers>>& getCustomers() const;
+
+        template<typename T, typename...Args>
+        std::shared_ptr<T> openAccount(std::shared_ptr<Customers> customer, Args&&...args)
+        {static_assert(std::is_base_of_v<BankAccount, T>, "T must be derived from BankAccount");
+
+            if(customer->getAge() < 18)
+            {
+                throw std::invalid_argument("Customers must be at least 18 years old.");
+            }
+            auto new_account = std::make_shared<T>(std::forward<Args>(args)...);
+            all_accounts_.push_back(new_account);
+            customer->linkAccount(new_account);
+            return new_account;
+        };
+
+        bool closeAccount(int account_number);
+        
     
 };
 

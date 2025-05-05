@@ -118,12 +118,12 @@ void Customers::display() const
     std::cout << "Age: " << getAge() << std::endl;
 }
 
-void Customers::linkAccount(const std::vector<std::shared_ptr<BankAccount>>& account)
+void Customers::linkAccount(std::shared_ptr<BankAccount> account)
 {
-    account_ = account;
+    account_.push_back(account);
 }
 
-std::vector<std::shared_ptr<BankAccount>> Customers::getAccount()const
+const std::vector<std::shared_ptr<BankAccount>> &Customers::getAccount()const
 {
     return account_;
 }
@@ -141,4 +141,30 @@ bool Customers::hasCreditCard() const
 std::vector<std::shared_ptr<CreditCard>> &Customers::getCreditCard()
 {
     return creditCard_;
+}
+
+std::vector<std::shared_ptr<SavingAccount>> Customers::getSavingAccount() const
+{
+    std::vector<std::shared_ptr<SavingAccount>> result;
+    for(const auto& acc : account_)
+    {
+        if(auto sa = std::dynamic_pointer_cast<SavingAccount>(acc))
+        {
+            result.push_back(sa);
+        }
+    }
+    return result;
+}
+
+std::vector<std::shared_ptr<CheckingAccount>> Customers::getCheckingAccount() const
+{
+    std::vector<std::shared_ptr<CheckingAccount>> result;
+    for(const auto& acc : account_)
+    {
+        if(auto ca = std::dynamic_pointer_cast<CheckingAccount>(acc))
+        {
+            result.push_back(ca);
+        }
+    }
+    return result;
 }

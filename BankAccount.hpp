@@ -19,7 +19,6 @@ private:
     bool hasLowBalance_;
     double earning_interest_rate_;
     const int account_number_;
-    std::vector<std::shared_ptr<CreditCard>> creditCards_;
     std::shared_ptr<DebitCard> debitCard_;
     std::vector<Transaction> transactions_;
 
@@ -39,7 +38,6 @@ public:
     bool setEarningInterestRate(const double &interest_rate);
     bool applyDeposit(const double &amount);
     virtual bool applyWithdraw(const double &amount);
-    void addCreditCard(const std::string &credit_card_num, const std::string &expiration_date, const std::string &cvv_num, double creditLimit, bool isActivated, std::shared_ptr<BankAccount> account, const bool isExpired);
     int getAccountNumber() const;
     void addTransaction(Transaction::Type type, double amount, time_t timestamp);
 };

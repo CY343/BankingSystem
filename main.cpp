@@ -17,8 +17,8 @@ void testCreditCard() {
     std::cout << "\n=== TESTING CREDIT CARD ===\n";
     
     // Test constructor
-    auto account1 = std::make_shared<BankAccount>();
-    auto cc = std::make_shared<CreditCard>("4111111111111111", "12/25", "123", false, 5000.0, account1, false);
+    auto account1 = std::make_shared<CheckingAccount>(); // create a checking account with a credit card
+    auto cc = std::make_shared<CreditCard>("4111111111111111", "12/25", "123", true, 5000.0, account1, false);
     
     // Test getters
     std::cout << "Card Number: " << cc->getCardNumber() << "\n";
@@ -36,7 +36,7 @@ void testCreditCard() {
     cc->setActivated(true);
     std::cout << "After activation - Process $100 payment: " 
               << (cc->processPayment(100.0) ? "Success" : "Failed") << "\n";
-    
+
     // Test limit change
     try {
         cc->setCreditLimit(3000.0);
@@ -50,7 +50,7 @@ void testDebitCard() {
     std::cout << "\n=== TESTING DEBIT CARD ===\n";
     
     // Create bank account first
-    auto account = std::make_shared<BankAccount>();
+    auto account = std::make_shared<CheckingAccount>();
     account->applyDeposit(1000.0);
     
     // Test constructor
@@ -97,9 +97,6 @@ void testBankAccount() {
     // Test low balance
     std::cout << "Low Balance: " << (account->isLowBalance() ? "Yes" : "No") << "\n";
     
-    // Test credit card addition
-    account->addCreditCard("3333444455556666", "09/27", "789", 2000.0, true, account, false);
-    std::cout << "Added credit card to account\n";
 }
 
 void testCustomer() {
@@ -141,8 +138,8 @@ void testServices() {
     bankServices.addCustomers(newCustomers);
     std::cout << "Customer Count: " << bankServices.getCustomers().size() << "\n";
     
-    // Test account opening
-    bankServices.openAccount(customer1);
+    // Test account opening (checking account)
+    auto acc1 = bankServices.openAccount<CheckingAccount>(customer1);
     // Test account closing
     bankServices.closeAccount(1);
     // Test credit card issuance
@@ -150,10 +147,6 @@ void testServices() {
     account->applyDeposit(2000.0);
     customer1->linkAccount({account});
     
-    bankServices.issueCreditCardToCustomers(
-        customer1, account, "4444555566667777", "10/28", "321", 3000.0, true, false);
-    
-    std::cout << "Credit card issued to Alice\n";
     
     // Test customer deletion
     std::vector<std::shared_ptr<Customers>> toDelete = {customer2};
