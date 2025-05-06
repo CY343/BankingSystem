@@ -3,6 +3,24 @@
 #include<string>
 #include <stdexcept>
 
+// UUID
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
+
+/**
+ * @brief A helper function to generate customer id.
+ * 
+ * @return A string (unique customer id)
+ */
+std::string generate_uuid()
+{
+    boost::uuids::random_generator generator;
+    return boost::uuids::to_string(generator());
+}
+
+
 /**
  * @brief Creates an unauthenticated customer profile
  * 
@@ -15,7 +33,7 @@
  * @note Use for temporary placeholder customers
  * @warning Not suitable for banking operations - requires field updates
  */
-Customers::Customers(): customers_name_("NONE"), customers_email_("NONE"), customers_phone_number_("NONE"), customers_age_(0){}
+Customers::Customers(): customers_name_("NONE"), customers_email_("NONE"), customers_phone_number_("NONE"), customers_id_(generate_uuid()), customers_age_(0){}
 
 
 /**
@@ -44,7 +62,7 @@ Customers::Customers(): customers_name_("NONE"), customers_email_("NONE"), custo
  * @endcode
  */
 Customers::Customers(const std::string& name, const std::string& email, const std::string& phone_number, int age)
-: customers_name_("NONE"), customers_email_("NONE"), customers_phone_number_("NONE"), customers_age_(0)
+:customers_id_(generate_uuid()), customers_name_("NONE"), customers_email_("NONE"), customers_phone_number_("NONE"), customers_age_(0)
 {
     
     if (setName(name)) {

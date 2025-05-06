@@ -9,6 +9,13 @@
 #include"SavingAccount.hpp"
 #include"CheckingAccount.hpp"
 
+/**
+ *  using uuid to generate unique random customer id
+ */
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
 class BankAccount;
 class CreditCard;
 
@@ -18,6 +25,7 @@ class Customers{
         std::string customers_name_; // A string corresponding to the name of the customer
         std::string customers_email_; // A string corresponding to the email of the customer
         std::string customers_phone_number_; // A string corresponding to the phone number of the customer
+        std::string customers_id_; // A string corresponding to the id of the customer
         int customers_age_; // An integer corresponding to the age of the customer
 
         /**
@@ -184,6 +192,13 @@ class Customers{
          * @return A vector containing a shared pointers to customer's CheckingAccount objects
          */
         std::vector<std::shared_ptr<CheckingAccount>> getCheckingAccount() const;
+
+        /**
+         * @brief Retrieve customer id (using inline declaration)
+         * 
+         * @return A string Id randomly generated
+         */
+        std::string getCustomerId() const {return customers_id_;}
         
 };
 #endif

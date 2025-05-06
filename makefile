@@ -1,6 +1,7 @@
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -g
+CXXFLAGS = -std=c++17 -Wall -g -I/usr/include/boost
+LDFLAGS = -L/usr/lib/x86_64-linux-gnu/
 
 # Output executable
 TARGET = BankingSystem
@@ -12,14 +13,14 @@ SRCS = main.cpp Customers.cpp BankAccount.cpp CreditCard.cpp DebitCard.cpp Servi
 OBJS = $(SRCS:.cpp=.o)
 
 # Libraries
-LIBS = -lmysqlcppconn
+LIBS = -lmysqlcppconn -lboost_random
 
 # Default target
 all: $(TARGET)
 
 # Linking
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 # Compilation
 %.o: %.cpp

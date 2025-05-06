@@ -13,7 +13,7 @@ int BankAccount::next_account_number_ = 1000;
  *        Automatically assigns a unique account number by incrementing the static next_account_number_
  */
 BankAccount::BankAccount():deposit_(0.0), withdrawal_(0.0),account_balance_(0.0),
- account_number_(next_account_number_++) {}
+ account_number_(next_account_number_++){}
 
 /**
  * @brief Parameterized constructor for the BankAccount class
@@ -28,7 +28,7 @@ BankAccount::BankAccount():deposit_(0.0), withdrawal_(0.0),account_balance_(0.0)
  * setLowBalance() to update the low balance flag based on the initial balance
  */
 BankAccount::BankAccount(const double &deposit, const double &withdrawal, const double &account_balance, const double &interest_rate)
-    : deposit_(deposit), withdrawal_(withdrawal), account_balance_(account_balance),interest_rate_(interest_rate), account_number_(next_account_number_++)
+    : deposit_(deposit), withdrawal_(withdrawal), account_balance_(account_balance),account_number_(next_account_number_++), interest_rate_(interest_rate)
     {
         setLowBalance();
     }
