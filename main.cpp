@@ -1,4 +1,4 @@
-#include <iostream>
+/* #include <iostream>
 #include <memory>
 #include "Card.hpp"
 #include "CreditCard.hpp"
@@ -166,5 +166,31 @@ int main() {
      testServices(); 
     
     std::cout << "\n=== ALL TESTS COMPLETED ===\n";
+    return 0;
+} */
+
+#include <mysql_driver.h>
+#include <mysql_connection.h>
+#include <cppconn/statement.h>
+#include <cppconn/resultset.h>
+#include <iostream>
+
+int main() {
+    sql::mysql::MySQL_Driver* driver;
+    sql::Connection* conn;
+
+    driver = sql::mysql::get_mysql_driver_instance();
+    conn = driver->connect("tcp://127.0.0.1:3306", "root", "wayne970911");
+
+    conn->setSchema("banking_system");
+
+    std::unique_ptr<sql::Statement> stmt(conn->createStatement());
+    std::unique_ptr<sql::ResultSet> res(stmt->executeQuery("SELECT * FROM accounts"));
+
+    while (res->next()) {
+        std::cout << "Account Number: " << res->getString("account_number") << std::endl;
+    }
+
+    delete conn;
     return 0;
 }

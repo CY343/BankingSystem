@@ -3,8 +3,46 @@
 #include<string>
 #include <stdexcept>
 
+/**
+ * @brief Creates an unauthenticated customer profile
+ * 
+ * Initializes all fields to invalid defaults:
+ * - Name: "NONE"
+ * - Email: "NONE"
+ * - Phone: "NONE"
+ * - Age: 0
+ * 
+ * @note Use for temporary placeholder customers
+ * @warning Not suitable for banking operations - requires field updates
+ */
 Customers::Customers(): customers_name_("NONE"), customers_email_("NONE"), customers_phone_number_("NONE"), customers_age_(0){}
 
+
+/**
+ * @brief Creates validated customer profile
+ * 
+ * Initializes fields through validation chain:
+ * 1. Validates/uppercases name via setName()
+ * 2. Validates email format via setEmail()
+ * 3. Validates phone number via setPhoneNumber()
+ * 4. Validates age via setAge() (throws on invalid)
+ * 
+ * @param name Alphabetic+space chars only
+ * @param email RFC 5322 pattern
+ * @param phone_number 10-digit US format
+ * @param age Non-negative integer
+ * 
+ * @throws std::invalid_argument If age < 0
+ * 
+ * @note Invalid string parameters set to "NONE"
+ * @warning Name validation converts valid input to UPPERCASE
+ * 
+ * @code
+ * Valid: Customers("John Doe", "john@doe.com", "1234567890", 30)
+ * Invalid: Customers("User123", "bad-email", "short", -5) 
+ *   // Name=NONE, Email=NONE, Phone=NONE, Age=0 (exception thrown)
+ * @endcode
+ */
 Customers::Customers(const std::string& name, const std::string& email, const std::string& phone_number, int age)
 : customers_name_("NONE"), customers_email_("NONE"), customers_phone_number_("NONE"), customers_age_(0)
 {
@@ -29,25 +67,24 @@ std::string Customers::getName()const
 
 bool Customers::setName(const std::string& name)
 {
-    
-    for(size_t i = 0; i < name.size(); i++)
+    for(char c : name)
     {
-        if(!isalpha(name[i]) && name[i] != ' ')
+        if(!isalpha(c) && c != ' ')
         {
-            std::cout << "Please enter a valid name!" << std::endl;
             return false;
         }
-    }  
-
-    customers_name_ = name;
-    for(size_t i = 0; i < name.size()&& isalpha(name[i]); i++)
-    {
-        customers_name_[i] = std::toupper(customers_name_[i]);
-       
     }
-    
+    customers_name_ = name;
+
+    for(char& c : customers_name_)
+    {
+        if(isalpha(c))
+        {
+            c = toupper(c);
+        }
+    }
+   
     return true;
-    
 }
 
 std::string Customers::getEmail()const
@@ -57,7 +94,7 @@ std::string Customers::getEmail()const
 
 bool Customers::setEmail(const std::string& email)
 {
-    std::regex pattern(R"(^[A-z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$)", std::regex::icase);
+    std::regex pattern(R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)");
     if(!std::regex_match(email, pattern))
     {
         return false;
