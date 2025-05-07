@@ -63,7 +63,10 @@ class Customers{
          * @param a const string reference phone_number 
          * @param a int age 
          */
-        Customers(const std::string& name, const std::string& email, const std::string& phone_number, int age);
+        Customers(const std::string& name, 
+                  const std::string& email, 
+                  const std::string& phone_number, 
+                  int age);
 
         /**
          * @brief Retrieves the name of the customer

@@ -23,7 +23,12 @@ class Card{
 
     public:
         Card(); 
-        Card(const std::string& number, const std::string& expiration, const std::string cvv, const bool isActivated, const bool isExpired);
+        Card(const std::string& number, 
+             const std::string& expiration, 
+             const std::string cvv, 
+             const bool isActivated, 
+             const bool isExpired);
+             
         bool isActivated() const;
         void setActivated(bool isActivate);
         virtual bool processPayment(double amount) = 0; 

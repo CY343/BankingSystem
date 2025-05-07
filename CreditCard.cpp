@@ -3,11 +3,20 @@
 #include <iostream>
 #include <string>
 
-CreditCard::CreditCard():Card("None", "None", "None", false, false), credit_limit_(0),linked_credit_card_account(){}
+CreditCard::CreditCard():Card("None", "None", "None", false, false), 
+                         credit_limit_(0),
+                         linked_credit_card_account(){}
 
 
-CreditCard::CreditCard(const std::string &number, const std::string &expiration, const std::string &cvv, const bool &isActivated, const double &credit_limit, std::shared_ptr<BankAccount> Linked_account, const bool isExpired)
-    : Card(number, expiration, cvv, isActivated, isExpired), credit_limit_(credit_limit), linked_credit_card_account(Linked_account){}
+CreditCard::CreditCard(const std::string &number, 
+                       const std::string &expiration, 
+                       const std::string &cvv, 
+                       const bool &isActivated, 
+                       const double &credit_limit, std::shared_ptr<BankAccount> Linked_account, 
+                       const bool isExpired): 
+                       Card(number, expiration, cvv, isActivated, isExpired), 
+                       credit_limit_(credit_limit), 
+                       linked_credit_card_account(Linked_account){}
 
 
 bool CreditCard::setCreditLimit(double limit) 

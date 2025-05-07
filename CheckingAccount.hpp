@@ -37,8 +37,10 @@ class CheckingAccount:public BankAccount
 
         public:
             // constructor
-            CheckingAccount(double overdraft_limit = 0.0, double monthly_fee = 10.0, double fee_wavier_balance = 1500.00,
-            double daily_withdrawal_limit = 500.0);
+            CheckingAccount(double overdraft_limit = 0.0, 
+                            double monthly_fee = 10.0, 
+                            double fee_wavier_balance = 1500.00,
+                            double daily_withdrawal_limit = 500.0);
 
             // Key methods
             // overdraft management

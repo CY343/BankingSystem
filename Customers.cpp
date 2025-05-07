@@ -33,7 +33,11 @@ std::string generate_uuid()
  * @note Use for temporary placeholder customers
  * @warning Not suitable for banking operations - requires field updates
  */
-Customers::Customers(): customers_name_("NONE"), customers_email_("NONE"), customers_phone_number_("NONE"), customers_id_(generate_uuid()), customers_age_(0){}
+Customers::Customers(): customers_name_("NONE"), 
+                        customers_email_("NONE"), 
+                        customers_phone_number_("NONE"), 
+                        customers_id_(generate_uuid()), 
+                        customers_age_(0){}
 
 
 /**
@@ -61,10 +65,17 @@ Customers::Customers(): customers_name_("NONE"), customers_email_("NONE"), custo
  *   // Name=NONE, Email=NONE, Phone=NONE, Age=0 (exception thrown)
  * @endcode
  */
-Customers::Customers(const std::string& name, const std::string& email, const std::string& phone_number, int age)
-:customers_id_(generate_uuid()), customers_name_("NONE"), customers_email_("NONE"), customers_phone_number_("NONE"), customers_age_(0)
-{
-    
+Customers::Customers(const std::string& name, 
+                     const std::string& email, 
+                     const std::string& phone_number, 
+                     int age):
+                     customers_id_(generate_uuid()), 
+                     customers_name_("NONE"), 
+                     customers_email_("NONE"), 
+                     customers_phone_number_("NONE"), 
+                                        customers_age_(0)
+    {
+
     if (setName(name)) {
         customers_name_ = name;
     }
@@ -75,7 +86,7 @@ Customers::Customers(const std::string& name, const std::string& email, const st
         customers_phone_number_ = phone_number;
     }
     setAge(age);
-}
+    }
 
 
 std::string Customers::getName()const

@@ -86,7 +86,10 @@ public:
      * Initializes a BankAccount object with specified values for deposit, withdrawal,
      * balance, and interest rate.
      */
-    BankAccount(const double &deposit, const double &withdrawal, const double &account_balance, const double &interest_rate);
+    BankAccount(const double &deposit, 
+                const double &withdrawal, 
+                const double &account_balance, 
+                const double &interest_rate);
 
     /**
      * @brief Retrieves unique account identifier(account number)

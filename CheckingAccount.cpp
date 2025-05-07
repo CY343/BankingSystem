@@ -1,9 +1,18 @@
 #include"CheckingAccount.hpp"
 #include<stdexcept>
 
-CheckingAccount::CheckingAccount(double overdraft_limit, double monthly_fee, double fee_waiver_balance, double dailyWithdrawal_limit):
-BankAccount(0.0, 0.0, 0.0, 0.0), overdraft_limit_(overdraft_limit), monthly_maintenance_fee_(monthly_fee), minimum_balance_waiver_(fee_waiver_balance),
-daily_withdrawal_limit_(dailyWithdrawal_limit), has_overdraft_protection_(false), monthly_transaction_count_(0), is_business_account_(false){}
+CheckingAccount::CheckingAccount(double overdraft_limit, 
+                                 double monthly_fee, 
+                                 double fee_waiver_balance, 
+                                 double dailyWithdrawal_limit):
+                                 BankAccount(0.0, 0.0, 0.0, 0.0), 
+                                 overdraft_limit_(overdraft_limit), 
+                                 monthly_maintenance_fee_(monthly_fee),
+                                 minimum_balance_waiver_(fee_waiver_balance),
+                                 daily_withdrawal_limit_(dailyWithdrawal_limit), 
+                                 has_overdraft_protection_(false), 
+                                 monthly_transaction_count_(0), 
+                                 is_business_account_(false){}
 
 bool CheckingAccount::setOverdraftLimit(double limit)
 {
