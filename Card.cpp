@@ -1,9 +1,18 @@
 #include"Card.hpp"
 
-Card::Card():card_number_("NONE"), expiration_("NONE"), cvv_("None"), isActivated_(false), isExpired_(false){}
+Card::Card():card_number_("NONE"), 
+             expiration_("NONE"), cvv_("None"), 
+             isActivated_(false), 
+             isExpired_(false){}
 
-Card::Card(const std::string& number, const std::string& expiration, const std::string cvv, const bool isActivated, const bool isExpired):
-card_number_(number), expiration_(expiration), cvv_(cvv), isActivated_(isActivated), isExpired_(isExpired){}
+Card::Card(const std::string& number, 
+           const std::string& expiration, 
+           const std::string cvv, const bool isActivated, 
+           const bool isExpired):
+           card_number_(number),
+           expiration_(expiration), 
+           cvv_(cvv), isActivated_(isActivated), 
+           isExpired_(isExpired){}
 
 
 bool Card::isActivated() const

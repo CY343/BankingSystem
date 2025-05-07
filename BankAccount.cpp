@@ -13,7 +13,8 @@ int BankAccount::next_account_number_ = 1000;
  *        Automatically assigns a unique account number by incrementing the static next_account_number_
  */
 BankAccount::BankAccount():deposit_(0.0),
-                           withdrawal_(0.0),account_balance_(0.0),
+                           withdrawal_(0.0),
+                           account_balance_(0.0),
                            account_number_(next_account_number_++){}
 
 /**

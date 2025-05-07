@@ -48,8 +48,8 @@ class CheckingAccount:public BankAccount
             double getOverdraftLimit() const;
 
             // Fee handling 
-            void applyMonthlyMantenanceFee();
-            bool qualifiesForFeeWaier() const;
+            void applyMonthlyMaintenanceFee();
+            bool qualifiesForFeeWaiver() const;
 
             // Debit card operations.
             // Issue a debit card

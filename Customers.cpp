@@ -69,11 +69,12 @@ Customers::Customers(const std::string& name,
                      const std::string& email, 
                      const std::string& phone_number, 
                      int age):
-                     customers_id_(generate_uuid()), 
                      customers_name_("NONE"), 
                      customers_email_("NONE"), 
                      customers_phone_number_("NONE"), 
-                                        customers_age_(0)
+                     customers_id_(generate_uuid()),
+                     customers_age_(0)
+                    
     {
 
     if (setName(name)) {
