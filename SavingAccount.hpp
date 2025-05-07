@@ -16,9 +16,9 @@ class SavingAccount: public BankAccount
                       const double &withdrawal, 
                       const double &account_balance, 
                       const double &interest_rate, 
-                      double min_balancen, 
+                      double min_balance, 
                       int withdrawal_times);
-                      
+
         bool applyWithdraw(const double& amount)override;
 
         void applyMonthlyInterest();
