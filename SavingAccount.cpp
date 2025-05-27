@@ -63,3 +63,9 @@ double SavingAccount::getInterestRate() const
 {
     return interest_rate_;
 }
+
+void SavingAccount::applyInterest() {
+    const double monthly_interest = getAccountBalance() * (getInterestRate() / 12.0);
+    applyDeposit(monthly_interest);
+    addTransaction(Transaction::INTEREST, monthly_interest, std::time(nullptr));
+}

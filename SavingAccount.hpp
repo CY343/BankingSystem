@@ -26,7 +26,7 @@ class SavingAccount: public BankAccount
 
         double getMinBalance() const;
         double getInterestRate() const;
-        
+        void applyInterest() override;
 
 
 

@@ -61,3 +61,70 @@ bool Services::closeAccount(int account_number)
     
 }
 
+void Services::processTransaction(std::shared_ptr<BankAccount> account,  Transaction::Type type,  double amount) {
+try {
+        if(type == Transaction::DEPOSIT)
+     {
+        account->applyDeposit(amount);
+     }
+         else 
+         {
+             account->applyWithdraw(amount);
+         }
+                                              } 
+        catch(const std::exception& e) 
+        {
+             std::cerr << "Transaction failed: " << e.what() << "\n";
+        // Log to error system
+        }
+}
+
+std::shared_ptr<Card> Services::replaceCard(std::shared_ptr<Card> old_card) {
+    if (!old_card || !old_card->validate()) return nullptr;
+
+    // Deactivate old card
+    old_card->setActivated(false);
+    old_card->markExpired();  // Mark as expired
+
+    // Create new card with same properties
+    if (auto debit = std::dynamic_pointer_cast<DebitCard>(old_card)) {
+        auto account = debit->getLinkedAccount().lock();
+        if (!account) return nullptr;
+        
+        auto new_debit = std::make_shared<DebitCard>(
+            account,  // Must come first
+            debit->getDailyWithdrawalLimit(),
+            "0000"  // PIN
+            // isActivated defaults to true
+        );
+        return new_debit;
+    }
+    else if (auto credit = std::dynamic_pointer_cast<CreditCard>(old_card)) {
+        auto account = credit->getLinkedAccount().lock();
+        if (!account) return nullptr;
+
+        auto new_credit = std::make_shared<CreditCard>(
+            credit->getCreditLimit(),
+            true,  // isActivated
+            account
+        );
+        return new_credit;
+    }
+    return nullptr;
+}
+
+void Services::applyMonthlyInterestToAll() {
+    for (auto& account : all_accounts_) {
+        if (auto savings = std::dynamic_pointer_cast<SavingAccount>(account)) {
+            savings->applyInterest();
+        }
+    }
+}
+
+void Services::processMonthlyFees() {
+    for (auto& account : all_accounts_) {
+        if (auto checking = std::dynamic_pointer_cast<CheckingAccount>(account)) {
+            checking->applyMonthlyMaintenanceFee();
+        }
+    }
+}

@@ -7,7 +7,7 @@
 
 class Transaction{
     public:
-        enum Type {DEPOSIT, WITHDRAW, INTEREST};
+        enum Type {DEPOSIT, WITHDRAW, INTEREST, FEE, PURCHASE};
         Transaction();
         Transaction(Type type, double amount, time_t timestamp);
         Type getType() const ;

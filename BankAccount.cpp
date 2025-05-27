@@ -85,9 +85,14 @@ bool BankAccount::applyDeposit(const double &amount)
  */
 bool BankAccount::applyWithdraw(const double &amount)
 {
-    if (amount <= 0 || account_balance_ < amount)
+    if (amount <= 0)
     {
-        return false;
+        throw std::invalid_argument("Withdrawal amount must be positive");
+    }
+
+    if(account_balance_ < amount)
+    {
+        throw std::runtime_error("Insufficient funds for withdrawal");
     }
     account_balance_ -= amount;
     transactions_.emplace_back(Transaction::WITHDRAW, amount, std::time(nullptr));
@@ -107,18 +112,6 @@ int BankAccount::getAccountNumber() const
     return account_number_;
 }
 
-/**
- * @brief Set the low balance flag_ for the bank account
- * 
- * This function checks if the account balance is below the threshold (500.0)
- * and update the hasLowBalance() accordingly
- * 
- */
-void BankAccount::setLowBalance()
-{   
-    hasLowBalance_ = (account_balance_ < 500.0);
-    
-}
 
 /**
  * @brief Checks if the account has a low balance
@@ -175,3 +168,43 @@ void BankAccount::addTransaction(Transaction::Type type, double amount, time_t t
     transactions_.emplace_back(type, amount, timestamp);
     
 }
+
+/**
+ * @brief check if the account has fallen below the low balance threshold and triggers a call back if so
+ * This function compares the current account balance to the defined LOW_BALANCE_THRESHOLD.
+ * If the balance has dropped below the LOW_BALANCE_THRESHOLD, and previously above it, it sets the hasLowBalance_
+ * 
+ * @return true and call hasLowBalance_() function 
+ */
+void BankAccount::setLowBalance()
+{
+    const bool previous = hasLowBalance_;
+    hasLowBalance_ = (account_balance_ < LOW_BALANCE_THRESHOLD);
+
+    if(!previous && hasLowBalance_)
+    {
+        onLowBalance();
+    }
+}
+
+/**
+ * @brief Notifies the user when their account balance falls below the low balance threshold
+ * 
+ * This function outputs an error message to the standard error steam, displying account
+ * number and current account balance to alert the user of a low balance account.
+ * 
+ * @return * void 
+ */
+void BankAccount::onLowBalance()
+{
+    std::cerr << "Low balance alert! Account #" << account_number_ << " has $ " << account_balance_ << std::endl;
+}
+
+
+/**
+ * @brief Apply the interest fee of the bank account.
+ * 
+ * @return * void 
+ */
+void BankAccount::applyInterest(){}
+

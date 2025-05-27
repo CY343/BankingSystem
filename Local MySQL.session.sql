@@ -1,1 +1,1 @@
-SELECT * FROM account
+SHOW tables

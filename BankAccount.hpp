@@ -28,6 +28,7 @@ private:
     bool hasLowBalance_; // A flag respresenting account that has low balance
     const int account_number_; // A const integer corresponding to account number of BankAccount
 
+    static constexpr double LOW_BALANCE_THRESHOLD = 500.0; // Add low balance threshold constant
 
 
     /**
@@ -64,7 +65,9 @@ private:
     void setLowBalance(); 
                         
 protected:
+
     double interest_rate_; // A protected double attribute corresponding the interest rate of BankAccount
+    virtual void onLowBalance(); // Add low balance notification method
 
 public:
     /**
@@ -152,6 +155,9 @@ public:
      * @param timestamp (The time when the transaction occurs)
      */
     void addTransaction(Transaction::Type type, double amount, time_t timestamp);
+
+    // Add interest application method
+    virtual void applyInterest();
 };
 
 #endif

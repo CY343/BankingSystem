@@ -89,12 +89,26 @@ Customers::Customers(const std::string& name,
     setAge(age);
     }
 
-
+/**
+ * @brief Retrieves the customer's name.
+ * 
+ * @return The name of the customer as a std::string.
+ */
 std::string Customers::getName()const
 {
     return customers_name_;
 }
 
+
+/**
+ * @brief Sets the customer's name after validating and formatting it.
+ * 
+ * Validates that the name contains only alphabetic characters and spaces.
+ * Converts all alphabetic characters to uppercase before setting.
+ * 
+ * @param name The new name to set.
+ * @return true if the name is valid and set successfully, false otherwise.
+ */
 bool Customers::setName(const std::string& name)
 {
     for(char c : name)
@@ -117,11 +131,27 @@ bool Customers::setName(const std::string& name)
     return true;
 }
 
+
+/**
+ * @brief Retrieves the customer's email address.
+ * 
+ * @return The email address of the customer as a std::string.
+ */
 std::string Customers::getEmail()const
 {
     return customers_email_;
 }
 
+
+/**
+ * @brief Sets the customer's email after validating its format.
+ * 
+ * Uses a regular expression to verify that the email is in a valid format.
+ * If valid, sets the customer's email; otherwise, returns false.
+ * 
+ * @param email The email address to set.
+ * @return true if the email format is valid and set successfully, false otherwise.
+ */
 bool Customers::setEmail(const std::string& email)
 {
     std::regex pattern(R"(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)");
@@ -133,38 +163,65 @@ bool Customers::setEmail(const std::string& email)
     return true;
 }
 
+/**
+ * @brief Retrieves the customer's phone number.
+ * 
+ * @return The phone number of the customer as a std::string.
+ */
 std::string Customers::getPhoneNumber()const
 {
     return customers_phone_number_;
 }
 
+
+/**
+ * @brief Sets the customer's phone number after cleaning and validating it.
+ * 
+ * Removes all non-digit characters from the input and checks that
+ * the resulting number contains exactly 10 digits.
+ * 
+ * @param phone_number The raw phone number string input.
+ * @return true if the phone number is valid and set successfully, false otherwise.
+ */
 bool Customers::setPhoneNumber(const std::string& phone_number)
 {
-    for(size_t i = 0; i < phone_number.size(); i++)
-    {
-        if(!isdigit(phone_number[i]))
-        {
-            std::cout << "Phone number must be digits" << std::endl;
-            return false;
-        }
+    std::string clean_number;
+    /// Remove all non-digit characters first
+    for(char c : phone_number) {
+        if(isdigit(c)) clean_number += c;
     }
     
-        if(phone_number.empty()||phone_number[0] != '1' || phone_number.size() != 10)
-        {
-            std::cout << "Phone number is invalid" << std::endl;
-            return false;
-        }
-        
-    customers_phone_number_ = phone_number;
+    /// Then validate length
+    if(clean_number.length() != 10) {
+        std::cerr << "Invalid phone number length\n";
+        return false;
+    }
+    
+    customers_phone_number_ = clean_number;
     return true;
-   
 }
 
+
+/**
+ * @brief Retrieves the customer's age.
+ * 
+ * @return The age of the customer as an integer.
+ */
 int Customers::getAge()const
 {
     return customers_age_;
 }
 
+
+/**
+ * @brief Sets the customer's age.
+ * 
+ * Throws an exception if the age is negative.
+ * 
+ * @param age The age to set.
+ * @return true if the age is valid and set successfully.
+ * @throws std::invalid_argument if the age is negative.
+ */
 bool Customers::setAge(const int age)
 {
     if(age < 0)
@@ -175,6 +232,12 @@ bool Customers::setAge(const int age)
     return true;
 }
 
+
+/**
+ * @brief Displays the customer's details to the standard output.
+ * 
+ * Prints the customer's name, email, phone number, and age.
+ */
 void Customers::display() const
 {
 
@@ -185,31 +248,75 @@ void Customers::display() const
     std::cout << "Age: " << getAge() << std::endl;
 }
 
+
+/**
+ * @brief Links a bank account to the customer.
+ * 
+ * Adds the given shared pointer to a BankAccount to the customer's account list.
+ * 
+ * @param account A shared pointer to the BankAccount to link.
+ */
 void Customers::linkAccount(std::shared_ptr<BankAccount> account)
 {
     account_.push_back(account);
 }
 
+
+/**
+ * @brief Retrieves the list of bank accounts linked to the customer.
+ * 
+ * @return A constant reference to a vector of shared pointers to BankAccount objects.
+ */
 const std::vector<std::shared_ptr<BankAccount>> &Customers::getAccount()const
 {
     return account_;
 }
 
+
+/**
+ * @brief Sets the customer's credit card list.
+ * 
+ * Copies the provided vector of shared pointers to CreditCard objects
+ * into the customer's credit card collection.
+ * 
+ * @param card A reference to a vector of shared pointers to CreditCard objects.
+ */
 void Customers::setCreditCard(std::vector<std::shared_ptr<CreditCard>> &card)
 {
     creditCard_ = card;
 }
 
+
+/**
+ * @brief Checks if the customer has any credit cards linked.
+ * 
+ * @return true if the customer has one or more credit cards, false otherwise.
+ */
 bool Customers::hasCreditCard() const
 {
     return !creditCard_.empty();
 }
 
+
+/**
+ * @brief Retrieves the customer's list of credit cards.
+ * 
+ * @return A reference to a vector of shared pointers to CreditCard objects.
+ */
 std::vector<std::shared_ptr<CreditCard>> &Customers::getCreditCard()
 {
     return creditCard_;
 }
 
+
+/**
+ * @brief Retrieves all linked SavingAccount objects.
+ * 
+ * Iterates through all linked BankAccount objects, filters those that are
+ * SavingAccount instances using dynamic_pointer_cast, and returns them in a vector.
+ * 
+ * @return A vector of shared pointers to SavingAccount objects.
+ */
 std::vector<std::shared_ptr<SavingAccount>> Customers::getSavingAccount() const
 {
     std::vector<std::shared_ptr<SavingAccount>> result;
@@ -223,6 +330,15 @@ std::vector<std::shared_ptr<SavingAccount>> Customers::getSavingAccount() const
     return result;
 }
 
+
+/**
+ * @brief Retrieves all linked CheckingAccount objects.
+ * 
+ * Iterates through all linked BankAccount objects, filters those that are
+ * CheckingAccount instances using dynamic_pointer_cast, and returns them in a vector.
+ * 
+ * @return A vector of shared pointers to CheckingAccount objects.
+ */
 std::vector<std::shared_ptr<CheckingAccount>> Customers::getCheckingAccount() const
 {
     std::vector<std::shared_ptr<CheckingAccount>> result;

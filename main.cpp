@@ -182,7 +182,7 @@ int main() {
     driver = sql::mysql::get_mysql_driver_instance();
     conn = driver->connect("tcp://127.0.0.1:3306", "root", "wayne970911");
 
-    conn->setSchema("banking_system");
+    conn->setSchema("BankingSystem");
 
     std::unique_ptr<sql::Statement> stmt(conn->createStatement());
     std::unique_ptr<sql::ResultSet> res(stmt->executeQuery("SELECT * FROM accounts"));

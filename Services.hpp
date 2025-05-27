@@ -34,11 +34,16 @@ class Services{
             all_accounts_.push_back(new_account);
             customer->linkAccount(new_account);
             return new_account;
-        };
+        }
 
         bool closeAccount(int account_number);
         
-    
+        void processTransaction(std::shared_ptr<BankAccount> account, Transaction::Type type,  double amount);
+        std::shared_ptr<Card> replaceCard(std::shared_ptr<Card> old_card);
+            
+            // Batch operations
+        void applyMonthlyInterestToAll();
+        void processMonthlyFees();
 };
 
 
