@@ -6,7 +6,9 @@
 #include <chrono>
 #include <algorithm>
 
-
+/**
+ * @brief RAII helper to initialize and cleanup OpenSSL.
+ */
 struct OpenSSLInit {
     OpenSSLInit() {
         OpenSSL_add_all_algorithms();
@@ -18,6 +20,17 @@ struct OpenSSLInit {
 };
 static OpenSSLInit ssl_init;
 
+
+/**
+ * @brief Encrypts plaintext using AES-256-CBC.
+ * 
+ * Generates a random key and IV internally, encrypts the plaintext,
+ * and returns ciphertext along with the key and IV.
+ * 
+ * @param plaintext The input string to encrypt.
+ * @return EncryptedData containing ciphertext, IV, and key.
+ * @throws std::runtime_error on failure.
+ */
 SecurityHelper::EncryptedData SecurityHelper::encrypt(const std::string& plaintext) {
     EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
     if (!ctx) throw std::runtime_error("Failed to create cipher context");
@@ -70,6 +83,14 @@ SecurityHelper::EncryptedData SecurityHelper::encrypt(const std::string& plainte
     return result;
 }
 
+
+/**
+ * @brief Decrypts ciphertext using AES-256-CBC with given key and IV.
+ * 
+ * @param data The EncryptedData struct containing ciphertext, key, and IV.
+ * @return Decrypted plaintext string.
+ * @throws std::runtime_error on failure.
+ */
 std::string SecurityHelper::decrypt(const EncryptedData& data) {
     EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
     if (!ctx) throw std::runtime_error("Failed to create cipher context");
@@ -103,6 +124,14 @@ std::string SecurityHelper::decrypt(const EncryptedData& data) {
     return std::string(plaintext.begin(), plaintext.begin() + plaintext_len);
 }
 
+
+/**
+ * @brief Hashes a PIN concatenated with a salt using SHA-256.
+ * 
+ * @param pin The PIN string.
+ * @param salt The salt string.
+ * @return The SHA-256 hash as a binary string.
+ */
 std::string SecurityHelper::hashPin(const std::string& pin, const std::string& salt) {
     std::string salted = salt + pin;
     unsigned char hash[SHA256_DIGEST_LENGTH];
@@ -110,12 +139,28 @@ std::string SecurityHelper::hashPin(const std::string& pin, const std::string& s
     return std::string(reinterpret_cast<char*>(hash), SHA256_DIGEST_LENGTH);
 }
 
+
+/**
+ * @brief Generates cryptographically secure random bytes for a key.
+ * 
+ * @param buffer The buffer to fill with random bytes.
+ * @param length Number of bytes to generate.
+ * @throws std::runtime_error on failure.
+ */
 void SecurityHelper::generateKey(unsigned char* buffer, int length) {
     if (!RAND_bytes(buffer, length)) {
         throw std::runtime_error("Key generation failed");
     }
 }
 
+
+/**
+ * @brief Generates a random salt string.
+ * 
+ * @param length Length of the salt in bytes.
+ * @return A string containing random salt bytes.
+ * @throws std::runtime_error on failure.
+ */
 std::string SecurityHelper::generateRandomSalt(size_t length) {
     std::vector<unsigned char> salt(length);
     if (!RAND_bytes(salt.data(), length)) {
@@ -124,18 +169,45 @@ std::string SecurityHelper::generateRandomSalt(size_t length) {
     return std::string(salt.begin(), salt.end());
 }
 
+
+/**
+ * @brief Validates password strength.
+ * 
+ * Password must contain at least one uppercase letter, one lowercase letter,
+ * one digit, one special character, and be at least 8 characters long.
+ * 
+ * @param password Password string to validate.
+ * @return True if password is strong, false otherwise.
+ */
 bool SecurityHelper::validatePassword(const std::string& password) {
     const std::regex pattern(
         "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$");
     return std::regex_match(password, pattern);
 }
 
+
+/**
+ * @brief Securely wipes sensitive data from memory.
+ * 
+ * @param data Pointer to the data.
+ * @param length Length in bytes of the data to wipe.
+ */
 void SecurityHelper::secureClean(void* data, size_t length) {
     if (data && length > 0) {
         volatile unsigned char* p = static_cast<volatile unsigned char*>(data);
         while (length--) *p++ = 0;
     }
 }
+
+
+/**
+ * @brief Rotates encryption keys by decrypting with old keys and re-encrypting with new keys.
+ * 
+ * @param old_data The old encrypted data.
+ * @param old_key The old encryption key.
+ * @param old_iv The old initialization vector.
+ * @return A RotatedKeys struct containing new encrypted data and keys.
+ */
  SecurityHelper::RotatedKeys SecurityHelper::rotateKeys(
     const EncryptedData& old_data,
     const std::string& old_key,
@@ -166,6 +238,16 @@ void SecurityHelper::secureClean(void* data, size_t length) {
     };
 }
 
+
+
+/**
+ * @brief Generates a session token string valid for a specified duration.
+ * 
+ * Combines random bytes and expiration timestamp, then hashes the combination to create the token.
+ * 
+ * @param validity_seconds Number of seconds the token is valid (default 3600).
+ * @return A SessionToken struct with the token string and expiration timestamp.
+ */
 SecurityHelper::SessionToken SecurityHelper::generateSessionToken(int validity_seconds) {
     SessionToken token;
     
