@@ -50,7 +50,7 @@ database=BankingSystem
 username= root
 password=wayne970911
 ```
-### prject structure
+### project structure
 banking-system/
 ├── include/               # Header files
 │   ├── BankingExceptions.hpp
