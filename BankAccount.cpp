@@ -15,7 +15,8 @@ int BankAccount::next_account_number_ = 1000;
 BankAccount::BankAccount():deposit_(0.0),
                            withdrawal_(0.0),
                            account_balance_(0.0),
-                           account_number_(next_account_number_++){}
+                           account_number_(next_account_number_++),
+                           accountType_("NONE"){}
 
 /**
  * @brief Parameterized constructor for the BankAccount class
@@ -32,14 +33,25 @@ BankAccount::BankAccount():deposit_(0.0),
 BankAccount::BankAccount(const double &deposit, 
                          const double &withdrawal, 
                          const double &account_balance, 
-                         const double &interest_rate) :
+                         const double &interest_rate,
+                         const std::string& accountType) :
                          deposit_(deposit), 
                          withdrawal_(withdrawal),
                          account_balance_(account_balance),
                          account_number_(next_account_number_++), 
+                         accountType_(accountType),
                          interest_rate_(interest_rate)
                         {setLowBalance();}
-                             
+
+BankAccount::BankAccount(int exisiting_account_number, double balance, const std::string &accountType):deposit_(0.0),
+                                                                                           withdrawal_(0.0),
+                                                                                           account_balance_(balance),
+                                                                                           account_number_(exisiting_account_number),
+                                                                                           accountType_(accountType),
+                                                                                           interest_rate_(0.0)
+                        {
+                            setLowBalance();
+                        }
 
 /**
  * @brief Retrieves the account balance for the bank account
@@ -62,12 +74,15 @@ double BankAccount::getAccountBalance() const
  */
 bool BankAccount::applyDeposit(const double &amount)
 {
-    if (amount <= 0)
-    {
-        return false;
-    }
+    if (amount <= 0) return false;
+    
     account_balance_ += amount;
-    transactions_.emplace_back(Transaction::DEPOSIT, amount, std::time(nullptr));
+    transactions_.emplace_back(
+        std::to_string(account_number_),  // Account number as string
+        Transaction::DEPOSIT,
+        amount,
+        std::time(nullptr)
+    );
     setLowBalance();
     return true;
 }
@@ -85,17 +100,16 @@ bool BankAccount::applyDeposit(const double &amount)
  */
 bool BankAccount::applyWithdraw(const double &amount)
 {
-    if (amount <= 0)
-    {
-        throw std::invalid_argument("Withdrawal amount must be positive");
-    }
-
-    if(account_balance_ < amount)
-    {
-        throw std::runtime_error("Insufficient funds for withdrawal");
-    }
+    if (amount <= 0) throw std::invalid_argument("Withdrawal amount must be positive");
+    if (account_balance_ < amount) throw std::runtime_error("Insufficient funds for withdrawal");
+    
     account_balance_ -= amount;
-    transactions_.emplace_back(Transaction::WITHDRAW, amount, std::time(nullptr));
+    transactions_.emplace_back(
+        std::to_string(account_number_),  // Account number as string
+        Transaction::WITHDRAWAL,
+        amount,
+        std::time(nullptr)
+    );
     setLowBalance();
     return true;
 }
@@ -202,9 +216,12 @@ void BankAccount::onLowBalance()
 
 
 /**
- * @brief Apply the interest fee of the bank account.
+ * @brief get accountType()
  * 
- * @return * void 
+ * @return A string of accountType_
  */
-void BankAccount::applyInterest(){}
 
+std::string BankAccount::getAccountType() const
+{
+    return accountType_;
+}

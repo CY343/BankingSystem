@@ -5,9 +5,14 @@
 #include<iostream>
 #include<string>
 
+void DebitCard::onPinChange()
+{
+    std::cout << "Security alert: Pin changed for card " << getCardNumber() << std::endl;
+}
+
 /**
  * @brief Default constructor for DebitCard.
- * 
+ *
  * Initializes a new debit card with default values:
  * - Inactive and unvalidated card (via base Card constructor)
  * - Empty salt and PIN hash
@@ -20,7 +25,8 @@ DebitCard::DebitCard():Card(false, false),
                        pin_hash_(""),
                        daily_withdrawal_limit_(0.0), 
                        daily_spend_amount_(0.0),  
-                       contactless_enable_(false){}
+                       contactless_enable_(false),
+                       failed_attempts_(0){}
 
 
 /**
@@ -45,6 +51,7 @@ DebitCard::DebitCard(std::shared_ptr<CheckingAccount> account,
                         daily_withdrawal_limit_(daily_withdrawal_limit),
                         daily_spend_amount_(0.0),  // Initialize to default
                         contactless_enable_(true),  // Default to contactless enabled
+                        failed_attempts_(0),
                         linked_debit_card_account_(account) 
  {
     if (!RAND_status()) 
@@ -157,7 +164,12 @@ bool DebitCard::changePin(const std::string old_pin, const std::string new_pin)
         std::cerr << "Old PIN verification failed\n";
         return false;
     }
-    return setPin(new_pin);
+   if(setPin(new_pin)){
+    onPinChange();
+    return true;
+   }
+
+   return false;
 }
 
 

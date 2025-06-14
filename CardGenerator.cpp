@@ -28,6 +28,7 @@ std::string CardGenerator::generate(const std::string& bin_prefix) {
 
     // Calculate and append Luhn check digit
     number += calculateLuhn(number);
+    issued_numbers_.insert(number);
     
     return number;
 }
@@ -73,4 +74,11 @@ bool CardGenerator::validate(const std::string& number) {
            (issued_numbers_.count(number));
 }
 
+// CardGenerator.cpp
+void CardGenerator::pregenerate(size_t count) {
+    for (size_t i = 0; i < count; ++i) {
+        std::string number = generate("5");  // Using default prefix
+        // Number is automatically added to issued_numbers_
+    }
+}
  

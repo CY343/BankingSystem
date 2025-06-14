@@ -9,6 +9,22 @@
 /**
  * @brief RAII helper to initialize and cleanup OpenSSL.
  */
+
+
+ // SecurityHelper.cpp
+std::string SecurityHelper::generateRandomSalt(size_t length) {
+    if (length < 16) {
+        throw std::invalid_argument("Salt length must be at least 16 bytes");
+    }
+    
+    std::vector<unsigned char> salt(length);
+    if (!RAND_bytes(salt.data(), length)) {
+        throw std::runtime_error("Salt generation failed");
+    }
+    return std::string(salt.begin(), salt.end());
+}
+
+
 struct OpenSSLInit {
     OpenSSLInit() {
         OpenSSL_add_all_algorithms();
@@ -153,21 +169,6 @@ void SecurityHelper::generateKey(unsigned char* buffer, int length) {
     }
 }
 
-
-/**
- * @brief Generates a random salt string.
- * 
- * @param length Length of the salt in bytes.
- * @return A string containing random salt bytes.
- * @throws std::runtime_error on failure.
- */
-std::string SecurityHelper::generateRandomSalt(size_t length) {
-    std::vector<unsigned char> salt(length);
-    if (!RAND_bytes(salt.data(), length)) {
-        throw std::runtime_error("Salt generation failed");
-    }
-    return std::string(salt.begin(), salt.end());
-}
 
 
 /**

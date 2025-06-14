@@ -33,9 +33,13 @@ class Services{
             auto new_account = std::make_shared<T>(std::forward<Args>(args)...);
             all_accounts_.push_back(new_account);
             customer->linkAccount(new_account);
+
+            if constexpr(std::is_same_v<T, CheckingAccount>){
+                new_account->issueDebitCard();
+            }
             return new_account;
         }
-
+       
         bool closeAccount(int account_number);
         
         void processTransaction(std::shared_ptr<BankAccount> account, Transaction::Type type,  double amount);

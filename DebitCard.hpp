@@ -30,6 +30,9 @@ class DebitCard : public Card{
         mutable int failed_attempts_ = 0; ///< Number of failed PIN attempts (mutable for const methods).
 
         std::weak_ptr<CheckingAccount> linked_debit_card_account_; /// @brief Debit card linked to a checking account (weak pointer to avoid ownership cycles).
+
+    protected:
+        virtual void onPinChange();
     public:
         /**
          * @brief Default constructor for DebitCard.

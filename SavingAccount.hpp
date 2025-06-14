@@ -39,10 +39,7 @@ class SavingAccount: public BankAccount
          * @param min_balance The minimum balance required.
          * @param withdrawal_times Number of withdrawals already made this month.
          */
-        SavingAccount(const double &deposit, 
-                      const double &withdrawal, 
-                      const double &account_balance, 
-                      const double &interest_rate, 
+        SavingAccount( 
                       double min_balance, 
                       int withdrawal_times);
          /**

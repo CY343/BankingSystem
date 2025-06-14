@@ -19,14 +19,16 @@ class DebitCard;
  *        - Handle interest rate 
  *        - Enforces low balance check  
  */       
-class BankAccount
+class BankAccount : public std::enable_shared_from_this<BankAccount>
 {
 private:
     double deposit_; // A double corresponding to the deposit of BankAccount
     double withdrawal_; // A double corresponding to the withdrawal of BankAccount
     double account_balance_; // A double corresponding to the balance of BankAccount
+     const int account_number_; // A const integer corresponding to account number of BankAccount
     bool hasLowBalance_; // A flag respresenting account that has low balance
-    const int account_number_; // A const integer corresponding to account number of BankAccount
+    std::string accountType_;
+
 
     static constexpr double LOW_BALANCE_THRESHOLD = 500.0; // Add low balance threshold constant
 
@@ -92,7 +94,10 @@ public:
     BankAccount(const double &deposit, 
                 const double &withdrawal, 
                 const double &account_balance, 
-                const double &interest_rate);
+                const double &interest_rate,
+                const std::string &accountType);
+    
+    BankAccount( int exisiting_account_number, double balance, const std::string& accountType);
 
     /**
      * @brief Retrieves unique account identifier(account number)
@@ -157,7 +162,9 @@ public:
     void addTransaction(Transaction::Type type, double amount, time_t timestamp);
 
     // Add interest application method
-    virtual void applyInterest();
+    virtual void applyInterest() = 0;
+
+    std::string getAccountType() const;
 };
 
 #endif

@@ -1,4 +1,5 @@
 #include"CheckingAccount.hpp"
+#include<memory>
 #include<stdexcept>
 
 
@@ -18,7 +19,7 @@ CheckingAccount::CheckingAccount(double overdraft_limit,
                                  double monthly_fee, 
                                  double fee_waiver_balance, 
                                  double daily_Withdrawal_limit):
-                                 BankAccount(0.0, 0.0, 0.0, 0.0), 
+                                 BankAccount(0.0, 0.0, 0.0, 0.0, "None"), 
                                  overdraft_limit_(overdraft_limit), 
                                  monthly_maintenance_fee_(monthly_fee),
                                  minimum_balance_waiver_(fee_waiver_balance),
@@ -191,11 +192,53 @@ bool CheckingAccount::qualifiesForFeeWaiver() const
 }
 
 /* Need to be implemented later */
-void CheckingAccount::issueDebitCard(const std::string &card_number, const std::string &expiration, const std::string &cvv)
+void CheckingAccount::issueDebitCard()
 {
-    return;
+   try{
+        auto self = std::static_pointer_cast<CheckingAccount>(shared_from_this());
+        const std::string initialPin = "0000"; // user will force to change its pin
+        auto debitCard = std::make_shared<DebitCard>(
+            self,
+            daily_withdrawal_limit_,
+            initialPin
+        );
+
+        debit_cards_.push_back(debitCard);
+        std::cout << "Debit card issued for account #"
+                  << getAccountNumber() << std::endl;
+        
+   }
+
+   catch(const std::bad_weak_ptr& e){
+    
+        std::cerr << "Failed to issue debit card: Object not owed by shared_ptr."
+                  << "Create accounts using make_shared. Error: " << e.what() << std::endl;
+   }
+
+   catch(const std::exception& e){
+
+        std::cerr << "Failed to issue debit card " << e.what() << std::endl;
+   }
+
+   
+   
 }
 
+bool CheckingAccount::blockDebitCard(const std::string &cardNumber)
+{
+    for(auto& card: debit_cards_)
+    {
+        if(card->getCardNumber() == cardNumber)
+        {
+            card->setActivated(false);
+            card->markExpired();
+            std::cout<< "Credit card " << cardNumber << "blocked for account #" << getAccountNumber() << std::endl;
+            return true;
+        }
+    }
+        std::cerr << "Credit card " << cardNumber << " not found for account " << getAccountNumber() << std::endl;
+        return false;
+}
 
 /**
  * @brief Adds a new credit card linked to this checking account.

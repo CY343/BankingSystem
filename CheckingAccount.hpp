@@ -165,9 +165,9 @@ class CheckingAccount:public BankAccount
              * @param expiration The expiration date in MM/YY format.
              * @param cvv The card's CVV code.
              */           
-            void issueDebitCard(const std::string& card_number, const std::string& expiration, const std::string& cvv);
+            void issueDebitCard();
 
-           // bool blockDebitCard();
+            bool blockDebitCard(const std::string& cardNumber);
 
             // Transaction override
             /**

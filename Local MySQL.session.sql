@@ -1,1 +1,2 @@
-SHOW tables
+show tables
+

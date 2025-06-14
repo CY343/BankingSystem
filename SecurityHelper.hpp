@@ -16,6 +16,10 @@
  */
 class SecurityHelper{
         public:
+
+            
+
+
             /**
              * @struct EncryptedData
              * @brief Container for encrypted data components.
@@ -65,10 +69,10 @@ class SecurityHelper{
 
             /**
              * @brief Generates a random salt string.
-             * @param length The length of the salt to generate (default 16).
+             * @param length The length of the salt to generate.
              * @return A random salt string.
              */
-            static std::string generateRandomSalt(size_t length = 16);
+            static std::string generateRandomSalt(size_t length = 32);
             
             // ---------------- Validation ----------------
 

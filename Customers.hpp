@@ -202,6 +202,8 @@ class Customers{
          * @return A string Id randomly generated
          */
         std::string getCustomerId() const {return customers_id_;}
+
+        bool removeAccount(int account_number);
         
 };
 #endif

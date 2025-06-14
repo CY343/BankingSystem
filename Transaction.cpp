@@ -3,13 +3,16 @@
 #include<iomanip>
 #include<sstream>
 
-Transaction::Transaction():type_(DEPOSIT), 
+Transaction::Transaction():accountNumber_("None"),
+                           type_(DEPOSIT), 
                            amount_(0.0), 
                            timestamp_(std::time(nullptr)){}
 
-Transaction::Transaction(Type type, 
+Transaction::Transaction(const std::string &accountNumber,
+                         Type type, 
                          double amount, 
                          time_t timestamp):
+                         accountNumber_(accountNumber),
                          type_(type), 
                          amount_(amount), 
                          timestamp_(timestamp){}
@@ -37,4 +40,38 @@ std::string Transaction::toString() const
     return std::string(buffer) + " - " + (type_ == DEPOSIT ? "Deposit: $": "Withdraw: $") + std::to_string(amount_);
             
 
+}
+
+std::string Transaction:: getAccountNumber() const
+{
+    return accountNumber_;
+}
+
+std::string Transaction::stringToType(Type type)
+{
+   switch(type)
+    {
+        case Transaction::DEPOSIT:
+            return "DEPOSIT";
+        case Transaction::WITHDRAWAL:
+            return "WITHDRAWAL";
+        case Transaction::INTEREST:
+            return "INTEREST";
+        case Transaction::FEE:
+            return "FEE";
+        case Transaction::PURCHASE:
+            return "PURCHASE";
+        default:
+            return "UNKNOWN";
+    }
+
+}
+
+Transaction::Type Transaction::stringToType(const std::string &str)
+{
+    if(str == "DEPOSIT") return DEPOSIT;
+    if(str == "WITHDRAWAL") return WITHDRAWAL;
+    if(str == "INTEREST") return INTEREST;
+    if(str == "FEE") return FEE;
+    return UNKNOWN;
 }

@@ -44,21 +44,35 @@ bool Services::deleteCustomers(const std::vector<std::shared_ptr<Customers>>& Cu
 }
 
 
-bool Services::closeAccount(int account_number)
-{
-    /* delete account by looking for its account number
-       return false if not found.
-     */
-   auto it = std::find_if(all_accounts_.begin(), all_accounts_.end(), [account_number](const std::shared_ptr<BankAccount>& acc)
-   {
-    return acc->getAccountNumber() == account_number;
-   });
+bool Services::closeAccount(int account_number) {
+    // Unlink from all customers
+    bool unlinked = false;
+    for (auto& customer : customers_) {
+        if (customer->removeAccount(account_number)) {
+            unlinked = true;
+        }
+    }
+    
+    if (!unlinked) {
+        std::cerr << "Account #" << account_number 
+                  << " not found in any customer profiles\n";
+    }
 
-   if(it == all_accounts_.end()) {return false;}
+    // Remove from global account list
+    auto it = std::find_if(all_accounts_.begin(), all_accounts_.end(),
+        [account_number](const auto& acc) {
+            return acc->getAccountNumber() == account_number;
+        }
+    );
+    
+    if (it == all_accounts_.end()) {
+        std::cerr << "Account #" << account_number 
+                  << " not found in system registry\n";
+        return false;
+    }
 
     all_accounts_.erase(it);
     return true;
-    
 }
 
 void Services::processTransaction(std::shared_ptr<BankAccount> account,  Transaction::Type type,  double amount) {

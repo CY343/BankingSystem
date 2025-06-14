@@ -351,3 +351,18 @@ std::vector<std::shared_ptr<CheckingAccount>> Customers::getCheckingAccount() co
     }
     return result;
 }
+
+bool Customers::removeAccount(int account_number) {
+    // Use remove-erase idiom
+    auto new_end = std::remove_if(account_.begin(), account_.end(),
+        [account_number](const std::shared_ptr<BankAccount>& acc) {
+            return acc->getAccountNumber() == account_number;
+        }
+    );
+    
+    if (new_end != account_.end()) {
+        account_.erase(new_end, account_.end());
+        return true;
+    }
+    return false;
+}
